@@ -59,7 +59,7 @@ catch {
 <title>erturk</title>
 </head>
 <body>
-  <h2>Windows ve Office ürünleri için Powershell Multi Activaiton System çalıştırılabilir durumda</h2>
+  <h2>Windows ve Office ürünlerini etkinleştirmek için Powershell Multi Activation System çalıştırılabilir durumda</h2>
   <p></p>
   <p>PowerShell kodu için: <code>irm https://erturk.netlify.app/run | iex</code></p>
 </body>
