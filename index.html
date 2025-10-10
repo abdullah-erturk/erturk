@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Abdullah Ertürk Tools Showcase</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+  :root{
+    --bg:#f8f8f8; --text:#222; --card:#fff;
+    --icon:#b30000; --icon-strong:#ff0000;
+    --shadow: rgba(0,0,0,0.12);
+  }
+  body.dark{
+    --bg:#2E1F1F; --text:#f2f2f2; --card:#1e1e1e;
+    --icon:#ff4d4d; --icon-strong:#ff8080;
+    --shadow: rgba(0,0,0,0.6);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    transition: background .30s, color .30s;
+  }
+
+  /* THEME TOGGLE (sağ üst) */
+  .theme-toggle{
+    position: fixed;
+    top: 14px;
+    right: 18px;
+    width:42px; height:42px;
+    border-radius:50%;
+    border:none; cursor:pointer;
+    background:var(--card);
+    box-shadow: 0 4px 14px var(--shadow);
+    display:flex; align-items:center; justify-content:center;
+    z-index:9998; transition: transform .24s;
+  }
+  .theme-toggle:hover{ transform: scale(1.06); }
+  .theme-toggle i{ color:var(--icon); font-size:18px; }
+
+  /* PLAYER (sol üst, daha küçük) */
+  .player{
+    position: fixed;
+    top: 14px;
+    left: 18px;
+    width: 240px;
+    background: var(--card);
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 8px 24px var(--shadow);
+    z-index:9999;
+    transition: all .30;
+    font-size:13px;
+  }
+  /* minimize toggle (küçültülebilir) */
+  .player.minimized{ 
+    width: 48px; 
+    height: 48px;
+    padding:6px; 
+    overflow:hidden;
+  }
+  .player.minimized .player-header{
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .player.minimized .player-title,
+  .player.minimized .player-track,
+  .player.minimized .player-controls,
+  .player.minimized .player-progress,
+  .player.minimized .player-time,
+  .player.minimized .playlist{
+    display: none !important;
+  }
+  .player.minimized .logo{
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+  .player.minimized #minimizeBtn{
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    padding: 2px;
+  }
+  .player-header{ display:flex; gap:8px; align-items:center; }
+  .player .logo{ width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01)); color:var(--icon); font-size:15px;}
+  .player-title{ font-weight:600; font-size:13px; }
+  .player-track{ margin-top:4px; font-size:12px; color:var(--text); opacity:.95; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .player-controls{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; gap:6px;}
+  .player-controls .left{ display:flex; gap:6px; align-items:center;}
+  .player-controls button{
+    border: none; background:transparent; padding:6px; border-radius:8px; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center;
+    transition: background .24s, transform .08s;
+  }
+  .player-controls button:hover{ background: rgba(0,0,0,0.04); transform: translateY(-2px); }
+  .player-controls i{ font-size:14px; color:var(--icon); }
+
+  .player-progress{ margin-top:8px; width:100%; height:6px; background: rgba(0,0,0,0.06); border-radius:6px; cursor:pointer; position:relative; }
+  .player-progress .bar{ height:100%; width:0%; border-radius:6px; background: linear-gradient(90deg,var(--icon),var(--icon-strong)); transition:width .18s linear; }
+
+  .player-time{ display:flex; justify-content:space-between; font-size:11px; margin-top:6px; opacity:.85; color:var(--text); }
+
+  .playlist{ margin-top:8px; max-height:120px; overflow:auto; padding:6px; border-radius:8px; background: rgba(0,0,0,0.02); font-size:13px; }
+  .playlist ul{ list-style:none; margin:0; padding:0; }
+  .playlist li{ padding:6px 8px; border-radius:6px; cursor:pointer; display:flex; gap:8px; align-items:center; transition: background .24s; }
+  .playlist li:hover{ background: rgba(0,0,0,0.04); }
+  .playlist li.active{ background: linear-gradient(90deg, rgba(179,0,0,0.09), rgba(255,0,0,0.04)); }
+
+  /* Upload button (gizli input) */
+  .file-upload{ display:inline-block; }
+  .file-upload input{ display:none; }
+
+  /* MAIN CONTENT */
+  h1{ text-align:center; margin: 86px 0 18px; }
+  
+  /* Yeni eklenen intro bölümü */
+  .intro {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    padding: 20px;
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 6px 18px var(--shadow);
+    line-height: 1.8;
+  }
+  .intro p {
+    margin: 8px 0;
+  }
+  
+  .container{
+    display:grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap:18px;
+    justify-content:center;
+    padding: 18px;
+    max-width:1200px;
+    margin: 0 auto 60px;
+  }
+
+  .card{
+    width:100%;
+    background:var(--card);
+    border-radius:12px;
+    box-shadow: 0 6px 18px var(--shadow);
+    padding:18px;
+    transition: transform .30s, box-shadow .30s;
+  }
+  .card:hover{ transform: translateY(-6px); box-shadow: 0 12px 30px var(--shadow); }
+  .card h2{ margin:0 0 8px; display:flex; align-items:center; gap:8px; font-size:16px;}
+  .card h2 i{ color:var(--icon); }
+
+  a{ color:var(--text); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+
+  /* small screens */
+  @media(max-width:420px){
+    .player{ left:8px; top:10px; width:92%; }
+    .container{ grid-template-columns: repeat(4, 1fr); }
+    .intro { margin: 0 12px 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Player -->
+<div class="player" id="player">
+  <div class="player-header">
+    <div class="logo"><i class="fa-solid fa-music"></i></div>
+    <div style="flex:1; min-width:0;">
+      <div class="player-title">Mini Player</div>
+      <div class="player-track" id="currentTrack">— Bekleniyor —</div>
+    </div>
+    <!-- minimize button -->
+    <button id="minimizeBtn" title="Küçült" style="border:none;background:transparent;cursor:pointer;padding:4px;">
+      <i class="fa-solid fa-chevron-up" style="color:var(--icon);font-size:12px;"></i>
+    </button>
+  </div>
+
+  <div class="player-controls">
+    <div class="left">
+      <button id="prevBtn" title="Önceki"><i class="fa-solid fa-backward-step"></i></button>
+      <button id="playPauseBtn" title="Oynat / Duraklat"><i class="fa-solid fa-play"></i></button>
+      <button id="stopBtn" title="Durdur"><i class="fa-solid fa-stop"></i></button>
+      <button id="nextBtn" title="Sonraki"><i class="fa-solid fa-forward-step"></i></button>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:6px;">
+      <button id="shuffleBtn" title="Karıştır"><i class="fa-solid fa-shuffle"></i></button>
+
+      <!-- Dosya yükleme düğmesi -->
+      <div class="file-upload">
+        <input id="fileInput" type="file" accept="audio/*" multiple />
+        <label for="fileInput" style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:6px;border-radius:8px;transition:background .24s;">
+          <i class="fa-solid fa-folder-open" style="color:var(--icon);font-size:14px;"></i>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="player-progress" id="progress" title="Tıklayarak atla">
+    <div class="bar" id="progressBar"></div>
+  </div>
+
+  <div class="player-time">
+    <div id="timeCurrent">00:00</div>
+    <div id="timeTotal">00:00</div>
+  </div>
+
+  <div class="playlist" id="playlist" aria-live="polite">
+    <ul id="trackList"></ul>
+  </div>
+</div>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" id="themeToggle" title="Tema Değiştir">
+  <i class="fa-solid fa-moon"></i>
+</button>
+
+<h1><i class="fa-solid fa-terminal" style="margin-right:24px;"></i>Abdullah Ertürk</h1>
+
+<div class="intro" style="max-width:1000px; white-space:nowrap; overflow-x:auto; padding:4px;">
+  <p>👋 Merhaba, ben Abdullah</p>
+  <p>👀 Bilgisayarları ve bilişimi seviyorum.</p>
+  <p>🌱 Komut script dillerine (bat, cmd, vbs, ps1) özel bir ilgim var. Şu anda öğreniyorum.</p>
+  <p>💞️ Her zaman yeni başlayan biriyim, bu yüzden öğrenmeye daha açığım.</p>
+  <i class="fa-brands fa-github" style="margin-right:6px;"></i> Projelerimi beğenirseniz Github üzerinden oy verin ya da bana bir kahve ısmarlayın ☕ </p>
+  <a href="https://buymeacoffee.com/abdullaherturk" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+</div>
+
+
+<div class="container">
+
+<div class="card">
+<h2><i class="fa-solid fa-lock"></i> Encryption-Decryption Tool</h2>
+<p><a href="https://github.com/abdullah-erturk/Encryption-Decryption-Tool" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-brain"></i> PMAS</h2>
+<p><a href="https://github.com/abdullah-erturk/pmas" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-download"></i> IDM Tool</h2>
+<p><a href="https://github.com/abdullah-erturk/IDM-Tool" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-puzzle-piece"></i> Acronis Shell Extension</h2>
+<p><a href="https://github.com/abdullah-erturk/Acronis-Shell-Extension" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-brands fa-windows"></i> WinPE</h2>
+<p><a href="https://github.com/abdullah-erturk/WinPE" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-compact-disc"></i> Win10 Setup Disk WinToGo</h2>
+<p><a href="https://github.com/abdullah-erturk/Win10-Setup-Disk-WinToGo" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-broom"></i> Scan &amp; Repair Windows</h2>
+<p><a href="https://github.com/abdullah-erturk/scan_repair_windows" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-network-wired"></i> NetIPManager</h2>
+<p><a href="https://github.com/abdullah-erturk/NetIPManager" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-shield-halved"></i> SecureBoot Grub2FM Suite</h2>
+<p><a href="https://github.com/abdullah-erturk/SecureBoot-Grub2FM-Suite" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-terminal"></i> Ventoy Command Line Installer</h2>
+<p><a href="https://github.com/abdullah-erturk/Ventoy-Command-Line-Installer" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-layer-group"></i> Ventoy Grub2FM Multiboot With Original Files</h2>
+<p><a href="https://github.com/abdullah-erturk/Ventoy-Grub2FM-Multiboot-With-Original-Files" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-compact-disc"></i> iPXE ISO EFI MBR SecureBoot Support</h2>
+<p><a href="https://github.com/abdullah-erturk/iPXE-iso-efi-mbr-secureboot-support-" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-shield-virus"></i> USB HDD Protect</h2>
+<p><a href="https://github.com/abdullah-erturk/USB-HDD_Protect" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-id-card"></i> RustDesk ID Changer</h2>
+<p><a href="https://github.com/abdullah-erturk/RustDesk-ID-Changer" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-volume-xmark"></i> RustDesk Silent Installation</h2>
+<p><a href="https://github.com/abdullah-erturk/RustDesk-Silent-Installation" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-microchip"></i> HardwareInfo</h2>
+<p><a href="https://github.com/abdullah-erturk/HardwareInfo" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-gears"></i> Windows Update Pause Resume</h2>
+<p><a href="https://github.com/abdullah-erturk/Windows-Update-Pause-Resume" target="_blank"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+
+</div>
+
+
+<script>
+/* ---------- Tema toggle ---------- */
+(function() {
+  const themeToggle = document.getElementById('themeToggle');
+  const body = document.body;
+  
+  // Sayfa yüklendiğinde tema kontrolü
+const currentTheme = sessionStorage.getItem('theme');
+
+if (currentTheme === 'dark' || currentTheme === null) {
+  // İlk açılışta veya sessionStorage "dark" ise
+  body.classList.add('dark');
+  themeToggle.querySelector('i').className = 'fa-solid fa-sun';
+} else {
+  themeToggle.querySelector('i').className = 'fa-solid fa-moon';
+}
+
+  
+  // Tema değiştirme
+  themeToggle.addEventListener('click', function() {
+    body.classList.toggle('dark');
+    const isDark = body.classList.contains('dark');
+    
+    // İkon değiştir
+    const icon = themeToggle.querySelector('i');
+    if (isDark) {
+      icon.className = 'fa-solid fa-sun';
+    } else {
+      icon.className = 'fa-solid fa-moon';
+    }
+    
+    // Kaydet
+    sessionStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+})();
+
+/* ---------- Player logic ---------- */
+(function() {
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const shuffleBtn = document.getElementById('shuffleBtn');
+  
+  const currentTrackEl = document.getElementById('currentTrack');
+  const trackListEl = document.getElementById('trackList');
+  const progress = document.getElementById('progress');
+  const progressBar = document.getElementById('progressBar');
+  const timeCurrent = document.getElementById('timeCurrent');
+  const timeTotal = document.getElementById('timeTotal');
+  
+  const fileInput = document.getElementById('fileInput');
+  const minimizeBtn = document.getElementById('minimizeBtn');
+  const playerEl = document.getElementById('player');
+  
+  let audio = new Audio();
+  audio.preload = 'metadata';
+  
+  let tracks = [];
+  let currentIndex = 0;
+  let isPlaying = false;
+  let isShuffle = false;
+  
+  /* --- helper: isim gösterimi --- */
+  function niceName(item){
+    if (typeof item === 'string') {
+      const name = decodeURIComponent(item.split('/').pop());
+      return name.replace(/[-_]/g,' ').replace(/\.[^/.]+$/,'');
+    } else if (item && typeof item === 'object') {
+      return item.name || item.src.split('/').pop();
+    }
+    return String(item);
+  }
+  
+  /* --- playlist render --- */
+  function populatePlaylist(){
+    trackListEl.innerHTML = '';
+    if (!tracks.length) {
+      const li = document.createElement('li');
+      li.innerHTML = '<i class="fa-solid fa-folder-open" style="margin-right:6px;"></i>MP3 dosyaları yükleyin';
+      li.style.opacity = 0.7;
+      li.style.cursor = 'default';
+      trackListEl.appendChild(li);
+      currentTrackEl.textContent = "— Bekleniyor —";
+      timeCurrent.textContent = '00:00';
+      timeTotal.textContent = '00:00';
+      playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      return;
+    }
+    tracks.forEach((t, i) => {
+      const li = document.createElement('li');
+      li.textContent = niceName(t);
+      li.dataset.index = i;
+      li.addEventListener('click', function() { playTrack(parseInt(this.dataset.index)); });
+      if (i === currentIndex) li.classList.add('active');
+      trackListEl.appendChild(li);
+    });
+  }
+  
+  /* --- set audio src and play --- */
+  function playTrack(index){
+    console.log('playTrack çağrıldı, index:', index, 'toplam track:', tracks.length);
+    
+    if (!tracks.length) {
+      console.log('Track listesi boş');
+      return;
+    }
+    
+    currentIndex = ((index % tracks.length) + tracks.length) % tracks.length;
+    const item = tracks[currentIndex];
+    
+    console.log('Oynatılacak track:', item);
+    
+    if (!item) {
+      console.log('Track bulunamadı');
+      return;
+    }
+    
+    audio.src = typeof item === 'string' ? item : item.src;
+    console.log('Audio src ayarlandı:', audio.src);
+    
+    audio.play().then(function() {
+      console.log('✓ Oynatma başarılı');
+      isPlaying = true;
+      updateUI();
+    }).catch(function(e) {
+      console.error('✗ Oynatma hatası:', e);
+      isPlaying = false;
+      updateUI();
+    });
+  }
+  
+  /* --- UI update --- */
+  function updateUI(){
+    const lis = trackListEl.querySelectorAll('li');
+    lis.forEach(function(li) { li.classList.remove('active'); });
+    if (lis[currentIndex]) lis[currentIndex].classList.add('active');
+    currentTrackEl.textContent = tracks.length ? niceName(tracks[currentIndex]) : '— Bekleniyor —';
+    playPauseBtn.innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+  }
+  
+  /* --- controls --- */
+  playPauseBtn.addEventListener('click', function() {
+    if (!tracks.length) return;
+    if (!isPlaying) {
+      audio.play().then(function() {
+        isPlaying = true;
+        updateUI();
+      }).catch(function(e) {
+        console.log('Oynatma hatası:', e);
+        isPlaying = false;
+        updateUI();
+      });
+    } else {
+      audio.pause();
+      isPlaying = false;
+      updateUI();
+    }
+  });
+  
+  stopBtn.addEventListener('click', function() {
+    audio.pause();
+    audio.currentTime = 0;
+    isPlaying = false;
+    updateUI();
+  });
+  
+  prevBtn.addEventListener('click', function() {
+    if (!tracks.length) return;
+    if (audio.currentTime > 3) {
+      audio.currentTime = 0;
+      return;
+    }
+    playTrack(currentIndex - 1);
+  });
+  
+  nextBtn.addEventListener('click', function() {
+    if (!tracks.length) return;
+    playTrack(currentIndex + 1);
+  });
+  
+  shuffleBtn.addEventListener('click', function() {
+    isShuffle = !isShuffle;
+    shuffleBtn.style.opacity = isShuffle ? '1' : '0.6';
+  });
+  
+  /* --- audio events --- */
+  audio.addEventListener('timeupdate', function() {
+    if (!audio.duration || isNaN(audio.duration)) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    progressBar.style.width = pct + '%';
+    timeCurrent.textContent = formatTime(audio.currentTime);
+    timeTotal.textContent = formatTime(audio.duration);
+  });
+  
+  audio.addEventListener('ended', function() {
+    if (!tracks.length) return;
+    if (isShuffle) {
+      playTrack(Math.floor(Math.random() * tracks.length));
+    } else {
+      playTrack(currentIndex + 1);
+    }
+  });
+  
+  audio.addEventListener('play', function() {
+    isPlaying = true;
+    updateUI();
+  });
+  
+  audio.addEventListener('pause', function() {
+    isPlaying = false;
+    updateUI();
+  });
+  
+  audio.addEventListener('error', function(e) {
+    console.warn('Audio yükleme hatası:', audio.src, e);
+    currentTrackEl.textContent = "Yüklenemedi: " + (tracks[currentIndex] ? niceName(tracks[currentIndex]) : '');
+    isPlaying = false;
+    updateUI();
+  });
+  
+  /* --- progress seek --- */
+  progress.addEventListener('click', function(ev) {
+    if (!audio.duration) return;
+    const rect = progress.getBoundingClientRect();
+    const x = ev.clientX - rect.left;
+    audio.currentTime = (x / rect.width) * audio.duration;
+  });
+  
+  /* --- time format --- */
+  function formatTime(s){
+    if (!s || isNaN(s)) return '00:00';
+    const m = Math.floor(s/60);
+    const sec = Math.floor(s%60);
+    return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+  }
+  
+  /* --- mp3 klasöründeki dosyaları otomatik yükle --- */
+  function loadTracksFromFolder(){
+    // list.json'u dene
+    fetch('mp3/list.json', {cache: 'no-cache'})
+      .then(function(response) {
+        if (!response.ok) throw new Error('list.json bulunamadı');
+        return response.json();
+      })
+      .then(function(jsonData) {
+        if (Array.isArray(jsonData) && jsonData.length > 0) {
+          tracks = jsonData.map(function(file) { return 'mp3/' + file; });
+          currentIndex = 0;
+          populatePlaylist();
+          updateUI();
+          console.log('✓ MP3 dosyaları yüklendi:', tracks.length, 'parça');
+          // İlk şarkıyı otomatik başlat
+          setTimeout(function() { playTrack(0); }, 800);
+        } else {
+          console.log('list.json boş veya geçersiz');
+          populatePlaylist();
+        }
+      })
+      .catch(function(e) {
+        console.log('✗ list.json okunamadı:', e.message);
+        console.log('mp3/list.json dosyası oluşturun veya klasör ikonuyla manuel yükleyin');
+        populatePlaylist();
+      });
+  }
+  
+  /* --- local file selection --- */
+  fileInput.addEventListener('change', function(ev) {
+    console.log('Dosya seçimi tetiklendi');
+    const files = Array.from(ev.target.files || []);
+    console.log('Seçilen dosya sayısı:', files.length);
+    
+    if (files.length === 0) {
+      console.log('Hiç dosya seçilmedi');
+      return;
+    }
+    
+    handleLocalFiles(files);
+    ev.target.value = '';
+  });
+  
+  /* --- handle files -> blob urls --- */
+  function handleLocalFiles(files){
+    console.log('handleLocalFiles çağrıldı, dosya sayısı:', files.length);
+    
+    if (!files || !files.length) {
+      console.log('Dosya dizisi boş');
+      return;
+    }
+    
+    const audioFiles = files.filter(function(f) {
+      const isAudio = f.type.startsWith('audio') || /\.(mp3|wav|m4a|ogg|flac|aac)$/i.test(f.name);
+      console.log('Dosya:', f.name, 'Tip:', f.type, 'Audio mu?', isAudio);
+      return isAudio;
+    });
+    
+    console.log('Audio dosya sayısı:', audioFiles.length);
+    
+    if (!audioFiles.length) {
+      alert('Hiç audio dosyası bulunamadı!');
+      return;
+    }
+    
+    // Önceki blob URL'leri temizle
+    tracks.forEach(function(t) {
+      if (t && typeof t === 'object' && t.src && t._file) {
+        URL.revokeObjectURL(t.src);
+      }
+    });
+    
+    // Yeni track listesi
+    tracks = audioFiles.map(function(f) {
+      const blobURL = URL.createObjectURL(f);
+      console.log('Blob URL oluşturuldu:', f.name, '->', blobURL);
+      return {
+        src: blobURL,
+        name: f.name.replace(/\.[^/.]+$/, ''),
+        _file: f
+      };
+    });
+    
+    console.log('Toplam track sayısı:', tracks.length);
+    
+    currentIndex = 0;
+    populatePlaylist();
+    updateUI();
+    
+    // İlk şarkıyı başlat
+    console.log('İlk şarkı başlatılıyor...');
+    setTimeout(function() { playTrack(0); }, 300);
+  }
+  
+  /* --- minimize toggle --- */
+  minimizeBtn.addEventListener('click', function() {
+    playerEl.classList.toggle('minimized');
+    const ico = minimizeBtn.querySelector('i');
+    if (playerEl.classList.contains('minimized')) {
+      ico.className = 'fa-solid fa-chevron-down';
+    } else {
+      ico.className = 'fa-solid fa-chevron-up';
+    }
+  });
+  
+  /* --- init --- */
+  loadTracksFromFolder();
+  
+})();
+</script>
+</body>
+</html>
