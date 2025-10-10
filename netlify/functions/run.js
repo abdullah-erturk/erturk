@@ -59,7 +59,7 @@ catch {
 <title>erturk</title>
 </head>
 <body>
-<section style="font-family: Consolas, monospace; background: #1e1e1e; color: #e4e4e4; padding: 20px; border-radius: 10px; max-width: 800px;">
+<section style="font-family: Consolas, monospace; background: #1e1e1e; color: #e4e4e4; padding: 20px; border-radius: 10px; max-width: 800px; margin: 40px auto;">
   <h2 style="color: #4fc3f7;">💻 PowerShell Komut Satırı Üzerinden Çalıştırmak İçin:</h2>
   <ol style="margin-left: 20px;">
     <li>PowerShell'i açın.<br>
