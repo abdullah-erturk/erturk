@@ -81,6 +81,9 @@ catch {
     <li>Aşağıdaki komutu kopyalayıp yapıştırın ve <strong>Enter</strong> tuşuna basın:</li>
   </ol>
   <pre style="background: #2d2d2d; color: #00e676; padding: 12px; border-radius: 8px; overflow-x: auto;">irm erturk.netlify.app/run | iex</pre>
+ <p></p>
+ <li>Eğer TLS 1.2 hatası alırsanız aşağıdaki komutu kopyalayıp yapıştırın ve <strong>Enter</strong> tuşuna basın.<br>
+  <pre style="background: #2d2d2d; color: #00e676; padding: 12px; border-radius: 8px; overflow-x: auto;">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm https://erturk.netlify.app/run | iex</pre>
 </section>
 </body>
 </html>`;
