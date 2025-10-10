@@ -1,10 +1,12 @@
-# netlify.toml
 [build]
   publish = "public"
   command = ""
 
-[[headers]]
-  for = "/pmas.ps1"
-  [headers.values]
-    Content-Type = "text/plain; charset=utf-8"
-    X-Content-Type-Options = "nosniff"
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/run"
+  to = "/.netlify/functions/run"
+  status = 200
+  force = true
