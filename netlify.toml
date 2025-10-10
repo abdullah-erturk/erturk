@@ -1,6 +1,10 @@
 # netlify.toml
-[[redirects]]
-  from = "/"
-  to = "/pmas.ps1"
-  status = 200
-  force = true
+[build]
+  publish = "public"
+  command = ""
+
+[[headers]]
+  for = "/pmas.ps1"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
