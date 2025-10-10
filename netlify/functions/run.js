@@ -17,7 +17,7 @@ if ($culture -like 'tr-*') {
     Write-Host "Non-Turkish system detected. Downloading English script..." -ForegroundColor Yellow
 }
 
-$filename = "$env:TEMP\\pmas.cmd"
+$filename = "$env:TEMP\\pmas.bat"
 
 try {
     Invoke-WebRequest -Uri $url -OutFile $filename -UseBasicParsing
@@ -59,8 +59,9 @@ catch {
 <title>erturk</title>
 </head>
 <body>
-  <h1>Site çalışıyor</h1>
-  <p>PowerShell için: <code>irm https://erturk.netlify.app/run | iex</code></p>
+  <h1>Powershell Multi Activaiton System çalıştırılabilir durumda</h1>
+  <p></p>
+  <p>PowerShell kodu için: <code>irm https://erturk.netlify.app/run | iex</code></p>
 </body>
 </html>`;
 
