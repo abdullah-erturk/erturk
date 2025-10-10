@@ -1,10 +1,20 @@
 // netlify/functions/run.js
 exports.handler = async function (event) {
-  // pmasdownload.ps1 içeriği - buraya tam olarak yapıştırıldı
-  const psContent = `# This code downloads the script file for the Turkish or English PMAS v5 [Powershell Multi Activation System] application from the Github site, depending on the operating system language.
+  // pmasdownload.ps1 içeriği - TLS 1.2 ve dil algılamalı
+  const psContent = `# PMAS v5 - Automatic TLS 1.2 Support + Language Detection Downloader
+# ----------------------------------------------------------
+# This script downloads the Turkish or English PMAS v5 [Powershell Multi Activation System]
+# depending on the system language, and ensures TLS 1.2 is enabled for secure HTTPS connections.
 
-# pmasdownload.ps1
+# --- Enable TLS 1.2 for secure HTTPS connections ---
+try {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Write-Host "✅ TLS 1.2 enabled successfully." -ForegroundColor Green
+} catch {
+    Write-Host "⚠️ Could not enable TLS 1.2, attempting anyway..." -ForegroundColor Yellow
+}
 
+# --- Detect system language ---
 $culture = (Get-Culture).Name
 
 if ($culture -like 'tr-*') {
@@ -26,7 +36,7 @@ try {
 }
 catch {
     Write-Host
-\tWrite-Host "Error: Failed to download the script. The URL might be unreachable." -ForegroundColor Red
+    Write-Host "❌ Error: Failed to download the script. The URL might be unreachable." -ForegroundColor Red
     exit 1
 }
 
@@ -36,21 +46,22 @@ try {
 }
 catch {
     Write-Host
-    Write-Host "Error: Failed to execute the script." -ForegroundColor Red
+    Write-Host "❌ Error: Failed to execute the script." -ForegroundColor Red
 }
 
 try {
     Remove-Item $filename -Force
     Write-Host
-    Write-Host "Temporary file deleted." -ForegroundColor DarkGray
+    Write-Host "🧹 Temporary file deleted." -ForegroundColor DarkGray
     Write-Host
 }
 catch {
     Write-Host
-    Write-Host "Warning: Temporary file could not be deleted." -ForegroundColor DarkYellow
+    Write-Host "⚠️ Warning: Temporary file could not be deleted." -ForegroundColor DarkYellow
     Write-Host
 }`;
-  // Basit HTML içeriği (tarayıcılar için)
+
+  // Basit HTML içeriği (tarayıcılar için) - değişmedi
   const htmlContent = `<!DOCTYPE html>
 <html lang="tr">
 <head>
