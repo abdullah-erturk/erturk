@@ -1,6 +1,6 @@
 // netlify/functions/run.js
 exports.handler = async function (event) {
-  // pmasdownload.ps1 içeriği - TLS 1.2 ve dil algılamalı
+  // PMAS PowerShell scripti - TLS 1.2 ve dil algılama + tüm PowerShell user-agent’ları
   const psContent = `# PMAS v5 - Automatic TLS 1.2 Support + Language Detection Downloader
 # ----------------------------------------------------------
 # This script downloads the Turkish or English PMAS v5 [Powershell Multi Activation System]
@@ -87,8 +87,10 @@ catch {
 
   const ua = (event.headers['user-agent'] || '').toLowerCase();
 
-  // PowerShell user-agent'ı tespiti
-  if (ua.includes('powershell') || ua.includes('windows-powershell')) {
+  // PowerShell user-agent'ı tespiti (tüm sürümler)
+  const isPowershell = ua.includes('powershell') || ua.includes('windows-powershell') || ua.includes('pwsh');
+
+  if (isPowershell) {
     return {
       statusCode: 200,
       headers: {
