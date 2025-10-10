@@ -1,0 +1,6 @@
+# netlify.toml
+[[redirects]]
+  from = "/"
+  to = "/pmas.ps1"
+  status = 200
+  force = true
