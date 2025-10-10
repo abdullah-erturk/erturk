@@ -5,11 +5,11 @@
 $culture = (Get-Culture).Name
 
 if ($culture -like 'tr-*') {
-    $url = 'https://erturk.gt.tc/file/PMAS_v5_TR.bat'  # Turkish version
+    $url = 'https://raw.githubusercontent.com/abdullah-erturk/pmas/refs/heads/main/TR/PMAS_v5_TR.bat'  # Turkish version
     Write-Host
     Write-Host "Turkish system detected. Downloading Turkish script..." -ForegroundColor Cyan
 } else {
-    $url = 'https://erturk.gt.tc/file/PMAS_v5_ENG.bat'  # English version
+    $url = 'https://raw.githubusercontent.com/abdullah-erturk/pmas/refs/heads/main/ENG/PMAS_v5_ENG.bat'  # English version
     Write-Host
     Write-Host "Non-Turkish system detected. Downloading English script..." -ForegroundColor Yellow
 }
