@@ -70,7 +70,7 @@ catch {
 <title>erturk</title>
 </head>
 <body>
-<section style="font-family: Consolas, monospace; background: #1e1e1e; color: #e4e4e4; padding: 20px; border-radius: 10px; max-width: 800px; margin: 40px auto;">
+<section style="font-family: Consolas, monospace; background: #1e1e1e; color: #e4e4e4; padding: 20px; border-radius: 10px; max-width: 950px; margin: 40px auto;">
    <h2>Windows ve Office ürünlerini etkinleştirmek için Powershell Multi Activation System çalıştırılabilir durumda</h2>
    <p></p>
    <h2 style="color: #4fc3f7;">💻 PowerShell Komut Satırı Üzerinden Çalıştırmak İçin:</h2>
