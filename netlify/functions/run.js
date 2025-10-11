@@ -67,7 +67,7 @@ catch {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PowerShell Multi Activation System</title>
+<title>PMAS</title>
 </head>
 <body>
 <section style="font-family: Consolas, monospace; background: #1e1e1e; color: #e4e4e4; padding: 20px; border-radius: 10px; max-width: 950px; margin: 40px auto;">
