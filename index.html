@@ -167,6 +167,49 @@
     .container{ grid-template-columns: repeat(4, 1fr); }
     .intro { margin: 0 12px 30px; }
   }
+
+  /* --- Mobil görünüm düzeltmeleri --- */
+  @media(max-width: 768px) {
+
+    /* Player sabit kalacak ama introya taşmayacak */
+    .player {
+      position: relative;
+      top: auto;
+      left: auto;
+      width: 100%;
+      margin: 10px auto;
+      z-index: 10;
+    }
+
+    /* Intro kısmı taşma yapmasın */
+    .intro {
+      white-space: normal !important;
+      overflow-x: visible !important;
+      max-width: 95%;
+      margin: 10px auto 30px;
+      padding: 12px;
+    }
+
+    /* Kartlar alt alta dizilsin, hepsi görünsün */
+    .container {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+      gap: 14px !important;
+      padding: 10px;
+    }
+
+    /* Kart içeriği daha kompakt */
+    .card {
+      font-size: 15px;
+      padding: 14px;
+    }
+
+    /* Tema butonu ekranın sağ üstünde sabit kalsın */
+    .theme-toggle {
+      top: 10px;
+      right: 10px;
+      z-index: 9999;
+    }
+  }
 </style>
 </head>
 <body>
@@ -325,7 +368,6 @@
 </div>
 
 </div>
-
 
 <script>
 /* ---------- Tema toggle ---------- */
