@@ -1,7 +1,6 @@
 // netlify/functions/run.js
 exports.handler = async function (event) {
-  // Orijinal PowerShell script'i.
-  const psScript = `# This code downloads the script file for the Turkish or English PMAS v5 [Powershell Multi Activation System] application from the Github site, depending on the operating system language.
+const psScript = `# This code downloads the script file for the Turkish or English PMAS [Powershell Multi Activation System] application from the Github site, depending on the operating system language.
 
 if (-not $args) {
     Write-Host ''
