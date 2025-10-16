@@ -1,72 +1,162 @@
 // netlify/functions/run.js
 exports.handler = async function (event) {
-  // PMAS PowerShell scripti - TLS 1.2 ve dil algılama + tüm PowerShell user-agent’ları
-  const psContent = `# PMAS v5 - Automatic TLS 1.2 Support + Language Detection Downloader
-# ----------------------------------------------------------
-# This script downloads the Turkish or English PMAS v5 [Powershell Multi Activation System]
-# depending on the system language, and ensures TLS 1.2 is enabled for secure HTTPS connections.
+  const psContent = `# This code downloads the script file for the Turkish or English PMAS v5 [Powershell Multi Activation System] application from the Github site, depending on the operating system language.
 
-# --- Enable TLS 1.2 for secure HTTPS connections ---
-try {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    Write-Host "TLS 1.2 enabled successfully." -ForegroundColor Green
-} catch {
-    Write-Host "Could not enable TLS 1.2, attempting anyway..." -ForegroundColor Yellow
+if (-not $args) {
+    Write-Host ''
+    Write-Host 'https://erturk.netlify.app' -ForegroundColor Green
+    Write-Host 'https://github.com/abdullah-erturk/pmas' -ForegroundColor Green
+    Write-Host 'https://www.tnctr.com/topic/1254611-pmas-v5-powershell-multi-activation-system-eskiden-tsf-activation/' -ForegroundColor Green
+    Write-Host ''
 }
 
-# --- Detect system language ---
-$culture = (Get-Culture).Name
+    try {
+        [void][System.AppDomain]::CurrentDomain.GetAssemblies(); [void][System.Math]::Sqrt(144)
+    }
+    catch {
+        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Powershell failed to load .NET command."
+        return
+    }
 
-if ($culture -like 'tr-*') {
-    $url = 'https://raw.githubusercontent.com/abdullah-erturk/pmas/refs/heads/main/TR/PMAS_v5_TR.bat'  # Turkish version
-    Write-Host
-    Write-Host "Turkish system detected. Downloading Turkish script..." -ForegroundColor Cyan
-} else {
-    $url = 'https://raw.githubusercontent.com/abdullah-erturk/pmas/refs/heads/main/ENG/PMAS_v5_ENG.bat'  # English version
-    Write-Host
-    Write-Host "Non-Turkish system detected. Downloading English script..." -ForegroundColor Yellow
-}
+    function Check3rdAV {
+        try {
+            $cmd = if ($psv -ge 3) { 'Get-CimInstance' } else { 'Get-WmiObject' }
+            $avList = & $cmd -Namespace root\\SecurityCenter2 -Class AntiVirusProduct -ErrorAction SilentlyContinue | Where-Object { $_.displayName -notlike '*windows*' } | Select-Object -ExpandProperty displayName
 
-$filename = "$env:TEMP\\pmas.bat"
+            if ($avList) {
+                Write-Host '3rd party Antivirus might be blocking the script - ' -ForegroundColor White -BackgroundColor Blue -NoNewline
+                Write-Host " $($avList -join ', ')" -ForegroundColor DarkRed -BackgroundColor White
+            }
+        }
+        catch {
+        }
+    }
 
-try {
-    Invoke-WebRequest -Uri $url -OutFile $filename -UseBasicParsing
-    Write-Host
-    Write-Host "Script downloaded: $filename" -ForegroundColor Green
-}
-catch {
-    Write-Host
-    Write-Host "Error: Failed to download the script. The URL might be unreachable." -ForegroundColor Red
-    exit 1
-}
+    function CheckFile {
+        param ([string]$FilePath)
+        if (-not (Test-Path $FilePath)) {
+            Check3rdAV
+            Write-Host "Failed to create PMAS file in temp folder, aborting!"
+            throw
+        }
+    }
 
-try {
-    Start-Process -FilePath $filename -Wait
-    Write-Host
-}
-catch {
-    Write-Host
-    Write-Host "Error: Failed to execute the script." -ForegroundColor Red
-}
+    try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
-try {
-    Remove-Item $filename -Force
-    Write-Host
-    Write-Host "Temporary file deleted." -ForegroundColor DarkGray
-    Write-Host
-}
-catch {
-    Write-Host
-    Write-Host "Warning: Temporary file could not be deleted." -ForegroundColor DarkYellow
-    Write-Host
-}`;
+    # --- Detect system language ---
+    $osLanguage = (Get-UICulture).Name
+    
+    if (-not $osLanguage) {
+        try {
+            $osLanguage = [System.Globalization.CultureInfo]::InstalledUICulture.Name
+        } catch {
+            $osLanguage = (Get-Culture).Name
+        }
+    }
+
+    # Only use Turkish version if system language is Turkish, otherwise use English
+    if ($osLanguage -like 'tr-*') {
+        $url = 'https://raw.githubusercontent.com/abdullah-erturk/pmas/refs/heads/main/TR/PMAS_v5_TR.bat'
+        Write-Host
+        Write-Host "Turkish system detected [$osLanguage]. Downloading Turkish script..." -ForegroundColor Cyan
+    } else {
+        $url = 'https://raw.githubusercontent.com/abdullah-erturk/pmas/refs/heads/main/ENG/PMAS_v5_ENG.bat'
+        Write-Host
+        Write-Host "Non-Turkish system detected [$osLanguage]. Downloading English script..." -ForegroundColor Yellow
+    }
+
+    $URLs = @($url)
+
+    Write-Progress -Activity "Downloading..." -Status "Please wait"
+    $errors = @()
+    $responseBytes = $null
+    
+    foreach ($URL in $URLs | Sort-Object { Get-Random }) {
+        try {
+            if ($psv -ge 3) {
+                $webResponse = Invoke-WebRequest -Uri $URL -UseBasicParsing
+                if ($webResponse.Content -is [byte[]]) {
+                    $responseBytes = $webResponse.Content
+                } else {
+                    $responseBytes = [System.Text.Encoding]::Default.GetBytes($webResponse.Content)
+                }
+            }
+            else {
+                $w = New-Object Net.WebClient
+                $responseBytes = $w.DownloadData($URL)
+            }
+            break
+        }
+        catch {
+            $errors += $_
+        }
+    }
+    Write-Progress -Activity "Downloading..." -Status "Done" -Completed
+
+    if (-not $responseBytes -or $responseBytes.Length -eq 0) {
+        Check3rdAV
+        foreach ($err in $errors) {
+            Write-Host "Error: $($err.Exception.Message)" -ForegroundColor Red
+        }
+        Write-Host "Failed to retrieve PMAS from repository, aborting!"
+        Write-Host "Check if antivirus or firewall is blocking the connection."
+        return
+    }
+
+    # Check for AutoRun registry which may create issues with CMD
+    $paths = "HKCU:\\SOFTWARE\\Microsoft\\Command Processor", "HKLM:\\SOFTWARE\\Microsoft\\Command Processor"
+    foreach ($path in $paths) { 
+        if (Get-ItemProperty -Path $path -Name "Autorun" -ErrorAction SilentlyContinue) { 
+            Write-Warning "Autorun registry found, CMD may crash! \\`nManually copy-paste the below command to fix...\\`nRemove-ItemProperty -Path '$path' -Name 'Autorun'"
+        } 
+    }
+
+    $rand = [Guid]::NewGuid().Guid   
+    $filename = "PMAS_$rand.bat"    
+    $FilePath = Join-Path $env:TEMP $filename
+    
+    # Write bytes directly to file
+    [System.IO.File]::WriteAllBytes($FilePath, $responseBytes)
+    
+    Write-Host ''
+    Write-Host "Script downloaded: $FilePath" -ForegroundColor White
+    Write-Host ''
+    
+    CheckFile $FilePath
+
+    $env:ComSpec = "$env:SystemRoot\\system32\\cmd.exe"
+    $chkcmd = & $env:ComSpec /c "echo CMD is working"
+    if ($chkcmd -notcontains "CMD is working") {
+        Write-Warning "cmd.exe is not working."
+    }
+
+    if ($psv -lt 3) {
+        if (Test-Path "$env:SystemRoot\\Sysnative") {
+            Write-Warning "Command is running with x86 Powershell, run it with x64 Powershell instead..."
+            return
+        }
+        $p = saps -FilePath $env:ComSpec -ArgumentList "/c \\"\\"\\"$FilePath\\"\\" -el -qedit $args\\"\\"" -Verb RunAs -PassThru
+        $p.WaitForExit()
+    }
+    else {
+        saps -FilePath $env:ComSpec -ArgumentList "/c \\"\\"\\"$FilePath\\"\\" -el $args\\"\\"" -Wait -Verb RunAs
+    }   
+    CheckFile $FilePath
+
+    $UserTempPath = Join-Path $env:TEMP "PMAS*.bat"
+    Get-Item $UserTempPath -ErrorAction SilentlyContinue | Remove-Item
+    Write-Host "Temporary file deleted." -ForegroundColor Red
+    Write-Host ''
+    Write-Host "Exiting..." -ForegroundColor Red
+    Start-Sleep -Seconds 3`;
 
   // Basit HTML içeriği (tarayıcılar için) - değişmedi
   const htmlContent = `<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale-1">
 <title>PMAS</title>
 </head>
 <body>
@@ -85,7 +175,7 @@ catch {
       <small><br>(To do this, press <strong>Windows key + X</strong> and select <strong>PowerShell</strong> or <strong>Terminal</strong>.)</small><br><br>
     </li>
     <li> TR -> Aşağıdaki komutu kopyalayıp yapıştırın ve <strong>Enter</strong> tuşuna basın:<br>
-         EN -> Copy and paste the command below and press <strong>Enter</strong>:
+          EN -> Copy and paste the command below and press <strong>Enter</strong>:
     </li>
   </ol>
 
