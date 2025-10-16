@@ -6,7 +6,7 @@ if (-not $args) {
     Write-Host ''
     Write-Host 'https://erturk.netlify.app' -ForegroundColor Green
     Write-Host 'https://github.com/abdullah-erturk/pmas' -ForegroundColor Green
-    Write-Host 'https://www.tnctr.com/topic/1254611-pmas-v5-powershell-multi-activation-system-eskiden-tsf-activation/' -ForegroundColor Green
+    Write-Host 'https://www.tnctr.com/topic/1254611-pmas' -ForegroundColor Green
     Write-Host ''
 }
 
