@@ -11,8 +11,8 @@ if (-not $args) {
 }
 
 
-# --- Detect system language ---
-$culture = (Get-Culture).Name
+# --- Detect system UI language ---
+$culture = (Get-UICulture).Name
 
 if ($culture -like 'tr-*') {
     $url = 'https://raw.githubusercontent.com/abdullah-erturk/pmas/refs/heads/main/TR/PMAS_v5_TR.bat'  # Turkish version
