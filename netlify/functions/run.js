@@ -1,17 +1,17 @@
-// netlify/functions/run.js
 exports.handler = async function (event) {
     const psScript = `# This code downloads the script file for the Turkish or English PMAS [Powershell Multi Activation System] application from the Github site, depending on the operating system language.
 
 if (-not $args) {
     Write-Host ''
     Write-Host 'https://erturk.netlify.app' -ForegroundColor Green
+    Write-Host 'https://erturk.netlify.app/run' -ForegroundColor Green
     Write-Host 'https://github.com/abdullah-erturk/pmas' -ForegroundColor Green
     Write-Host 'https://www.tnctr.com/topic/1254611-pmas' -ForegroundColor Green
     Write-Host ''
 }
 
 
-# --- Detect system UI language ---
+# Sistem kullanıcı arayüzü dilini algıla
 $culture = (Get-UICulture).Name
 
 if ($culture -like 'tr-*') {
@@ -19,12 +19,14 @@ if ($culture -like 'tr-*') {
     Write-Host
     Write-Host "Turkish system detected. Downloading Turkish script..." -ForegroundColor Cyan
 } else {
-    $url = 'https://raw.githubusercontent.com/abdullah-erturk/pmas/refs/heads/main/ENG/PMAS_v5_ENG.bat'  # English version
+    $url = 'https://raw.githubusercontent.com/abdullah-erturk/pmas/refs/heads/main/ENG/PMAS_v5_ENG.bat' # English version
     Write-Host
     Write-Host "Non-Turkish system detected. Downloading English script..." -ForegroundColor Yellow
 }
 
-$filename = "$env:TEMP\\pmas.bat"
+# Dosya adının her seferinde benzersiz olmasını sağlamak için rastgele bir GUID oluşturur.
+$guid = [guid]::NewGuid().ToString("N")
+$filename = "$env:TEMP\\pmas_$guid.bat"
 
 try {
     Invoke-WebRequest -Uri $url -OutFile $filename -UseBasicParsing
@@ -49,16 +51,16 @@ catch {
 try {
     Remove-Item $filename -Force
     Write-Host
-    Write-Host "Temporary file deleted." -ForegroundColor DarkGray
+    Write-Host "Temporary file deleted." -ForegroundColor White
     Write-Host
 }
 catch {
     Write-Host
-    Write-Host "Warning: Temporary file could not be deleted." -ForegroundColor DarkYellow
+    Write-Host "Warning: Temporary file could not be deleted." -ForegroundColor Red
     Write-Host
 }`;
 
-    // Basit HTML içeriği (tarayıcılar için) - değişmedi
+    // Basit HTML içeriği (tarayıcılar için)
     const htmlContent = `<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -78,11 +80,11 @@ catch {
   <ol style="margin-left: 20px;">
     <li>TR -> PowerShell'i açın. (Minimum Powershell versiyonu: 5.0/5.1)
       <small><br>(Bunu yapmak için <strong>Windows tuşu + X</strong> tuşlarına basın ve ardından <strong>PowerShell</strong> veya <strong>Terminal</strong> seçeneğini tıklayın.)</small><br>
-        EN -> Open PowerShell. (Minimum Powershell version: 5.0/5.1)
+      EN -> Open PowerShell. (Minimum Powershell version: 5.0/5.1)
       <small><br>(To do this, press <strong>Windows key + X</strong> and select <strong>PowerShell</strong> or <strong>Terminal</strong>.)</small><br><br>
     </li>
     <li> TR -> Aşağıdaki komutu kopyalayıp yapıştırın ve <strong>Enter</strong> tuşuna basın:<br>
-          EN -> Copy and paste the command below and press <strong>Enter</strong>:
+      EN -> Copy and paste the command below and press <strong>Enter</strong>:
     </li>
   </ol>
 
@@ -111,7 +113,6 @@ catch {
                 'Content-Type': 'text/plain; charset=utf-8',
                 'X-Content-Type-Options': 'nosniff'
             },
-            // HATA BURADAYDI: Değişken adı 'psScript' olmalıydı.
             body: psScript
         };
     }
