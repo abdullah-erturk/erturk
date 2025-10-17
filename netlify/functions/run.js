@@ -1,6 +1,6 @@
 // netlify/functions/run.js
 exports.handler = async function (event) {
-const psScript = `# This code downloads the script file for the Turkish or English PMAS [Powershell Multi Activation System] application from the Github site, depending on the operating system language.
+    const psScript = `# This code downloads the script file for the Turkish or English PMAS [Powershell Multi Activation System] application from the Github site, depending on the operating system language.
 
 if (-not $args) {
     Write-Host ''
@@ -58,8 +58,8 @@ catch {
     Write-Host
 }`;
 
-  // Basit HTML içeriği (tarayıcılar için) - değişmedi
-  const htmlContent = `<!DOCTYPE html>
+    // Basit HTML içeriği (tarayıcılar için) - değişmedi
+    const htmlContent = `<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -82,7 +82,7 @@ catch {
       <small><br>(To do this, press <strong>Windows key + X</strong> and select <strong>PowerShell</strong> or <strong>Terminal</strong>.)</small><br><br>
     </li>
     <li> TR -> Aşağıdaki komutu kopyalayıp yapıştırın ve <strong>Enter</strong> tuşuna basın:<br>
-         EN -> Copy and paste the command below and press <strong>Enter</strong>:
+          EN -> Copy and paste the command below and press <strong>Enter</strong>:
     </li>
   </ol>
 
@@ -99,29 +99,30 @@ catch {
 </body>
 </html>`;
 
-  const ua = (event.headers['user-agent'] || '').toLowerCase();
+    const ua = (event.headers['user-agent'] || '').toLowerCase();
 
-  // PowerShell user-agent'ı tespiti (tüm sürümler)
-  const isPowershell = ua.includes('powershell') || ua.includes('windows-powershell') || ua.includes('pwsh');
+    // PowerShell user-agent'ı tespiti (tüm sürümler)
+    const isPowershell = ua.includes('powershell') || ua.includes('windows-powershell') || ua.includes('pwsh');
 
-  if (isPowershell) {
+    if (isPowershell) {
+        return {
+            statusCode: 200,
+            headers: {
+                'Content-Type': 'text/plain; charset=utf-8',
+                'X-Content-Type-Options': 'nosniff'
+            },
+            // HATA BURADAYDI: Değişken adı 'psScript' olmalıydı.
+            body: psScript
+        };
+    }
+
+    // Diğer (tarayıcı vb.) -> HTML döndür
     return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'X-Content-Type-Options': 'nosniff'
-      },
-      body: psContent
+        statusCode: 200,
+        headers: {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'no-cache'
+        },
+        body: htmlContent
     };
-  }
-
-  // Diğer (tarayıcı vb.) -> HTML döndür
-  return {
-    statusCode: 200,
-    headers: {
-      'Content-Type': 'text/html; charset=utf-8',
-      'Cache-Control': 'no-cache'
-    },
-    body: htmlContent
-  };
 };
