@@ -1,6 +1,6 @@
 exports.handler = async function (event) {
     const psScript = `# This code downloads the script file for the Turkish or English PMAS [Powershell Multi Activation System] application from the Github site, depending on the operating system language.
-
+ 
 if (-not $args) {
     Write-Host ''
     Write-Host 'https://erturk.netlify.app' -ForegroundColor Green
