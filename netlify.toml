@@ -4,19 +4,13 @@
 
 [functions]
   directory = "netlify/functions"
-
-# HEDEF 4 İÇİN: Ana dizin (/) isteklerini 'pmas.js' fonksiyonuna yönlendirir.
-[[redirects]]
-  from = "/"
-  to = "/.netlify/functions/pmas"
-  status = 200
-  force = true
   
-# HEDEF 2 ve 3 İÇİN: /pmas isteklerini 'pmas.js' fonksiyonuna yönlendirir.
+# SADECE /pmas kuralı kalıyor.
+# Bu, 'pmas.js' fonksiyonunu tetikler.
 [[redirects]]
   from = "/pmas"
   to = "/.netlify/functions/pmas"
   status = 200
   force = true
 
-# HEDEF 1 İÇİN: /run ile ilgili hiçbir kural yok.
+# Ana dizin ("/") kuralı kaldırıldı.
