@@ -12,5 +12,3 @@
   to = "/.netlify/functions/pmas"
   status = 200
   force = true
-
-# Ana dizin ("/") kuralı kaldırıldı.
