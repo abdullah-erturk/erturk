@@ -1,3 +1,3 @@
 # erturk.netlify.app
 
-# erturk.netlify.app/pmas
+# erturk.netlify.app/run
