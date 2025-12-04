@@ -1,8 +1,21 @@
 exports.handler = async function (event) {
     const psScript = `# This code downloads the script file for the Turkish or English PMAS [Powershell Multi Activation System] application from the Github site, depending on the operating system language.
 
-# Windows 7/8.1 uyumluluğu için TLS 1.2'yi etkinleştir
-[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+# Windows 7/8.1 ve PowerShell 2.0 uyumluluğu için TLS 1.2'yi etkinleştir
+# PowerShell 2.0'da TLS 1.2 enum değeri olmayabilir, bu yüzden değerini doğrudan kullanıyoruz
+try {
+    # PowerShell 3.0+ için standart yöntem
+    $tls12 = [Enum]::ToObject([Net.SecurityProtocolType], 3072)  # TLS 1.2 = 0x0C00 = 3072
+    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor $tls12
+} catch {
+    try {
+        # PowerShell 2.0 için alternatif yöntem: doğrudan değer atama
+        $current = [Net.ServicePointManager]::SecurityProtocol.value__
+        [Net.ServicePointManager]::SecurityProtocol = $current -bor 3072
+    } catch {
+        # TLS 1.2 etkinleştirme başarısız olsa bile devam et (WebClient kendisi halledebilir)
+    }
+}
 
 if (-not $args) {
     Write-Host ''
@@ -53,18 +66,29 @@ $guid = [guid]::NewGuid().ToString("N")
 $filename = "$env:TEMP\\pmas_$guid.bat"
 
 try {
-    # Windows 7/8.1 uyumluluğu için Invoke-WebRequest yerine WebClient kullanılabilir
-    # Önce Invoke-WebRequest'i dene
+    # PowerShell 2.0 uyumluluğu için önce WebClient kullan (Invoke-WebRequest PowerShell 3.0+ gerektirir)
+    $downloadSuccess = $false
     try {
-        Invoke-WebRequest -Uri $url -OutFile $filename -UseBasicParsing -ErrorAction Stop
-    } catch {
-        # Invoke-WebRequest başarısız olursa WebClient kullan (Windows 7 uyumlu)
+        # WebClient kullan (PowerShell 2.0+ uyumlu)
         $webClient = New-Object System.Net.WebClient
+        # WebClient için TLS 1.2 desteği (.NET 4.0+ ile çalışır)
         $webClient.DownloadFile($url, $filename)
         $webClient.Dispose()
+        $downloadSuccess = $true
+    } catch {
+        # WebClient başarısız olursa Invoke-WebRequest'i dene (PowerShell 3.0+)
+        try {
+            Invoke-WebRequest -Uri $url -OutFile $filename -UseBasicParsing -ErrorAction Stop
+            $downloadSuccess = $true
+        } catch {
+            throw $_.Exception
+        }
     }
-    Write-Host
-    Write-Host "Script downloaded: $filename" -ForegroundColor Green
+    
+    if ($downloadSuccess) {
+        Write-Host
+        Write-Host "Script downloaded: $filename" -ForegroundColor Green
+    }
 }
 catch {
     Write-Host
@@ -74,8 +98,9 @@ catch {
 }
 
 try {
-    # Start-Process yerine & operatörü de kullanılabilir ama Start-Process daha güvenli
-    Start-Process -FilePath $filename -Wait -NoNewWindow
+    # .bat dosyasını ayrı bir CMD penceresinde aç
+    # cmd.exe ile açarak kesinlikle yeni bir konsol penceresi oluşturulur
+    Start-Process -FilePath "cmd.exe" -ArgumentList "/c", $filename -Wait
     Write-Host
 }
 catch {
@@ -114,9 +139,9 @@ catch {
   <h3 style="color: #4fc3f7;">💻 EN -> To Run via PowerShell Command Line:</h3>
 
   <ol style="margin-left: 20px;">
-    <li>TR -> PowerShell'i açın. (Minimum Powershell versiyonu: 5.0/5.1)
+    <li>TR -> PowerShell'i açın.
       <small><br>(Bunu yapmak için <strong>Windows tuşu + X</strong> tuşlarına basın ve ardından <strong>PowerShell</strong> veya <strong>Terminal</strong> seçeneğini tıklayın.)</small><br>
-      EN -> Open PowerShell. (Minimum Powershell version: 5.0/5.1)
+      EN -> Open PowerShell.
       <small><br>(To do this, press <strong>Windows key + X</strong> and select <strong>PowerShell</strong> or <strong>Terminal</strong>.)</small><br><br>
     </li>
     <li> TR -> Aşağıdaki komutu kopyalayıp yapıştırın ve <strong>Enter</strong> tuşuna basın:<br>
@@ -124,15 +149,14 @@ catch {
     </li>
   </ol>
 
+  <h4 style="color: #81c784;">PowerShell 3.0+ için:</h4>
   <pre style="background: #2d2d2d; color: #00e676; padding: 12px; border-radius: 8px; overflow-x: auto;">irm erturk.netlify.app/run | iex</pre>
 
-  <small>TR -> Powershell sürümünüz 5.0'dan düşükse TLS 1.2 bağlantı hatası ile karşılaşabilirsiniz.. </small><br>
-  <small>EN -> If your Powershell version is lower than 5.0, you may encounter a TLS 1.2 connection error.. </small>
-  <p></p>
-  <li>TR -> Eğer TLS 1.2 hatası alırsanız aşağıdaki komutu kullanın:</li>
-  <li>EN -> If you get a TLS 1.2 error, use the command below instead:</li>
+  <h4 style="color: #ffb74d;">PowerShell 2.0 (Windows 7) için:</h4>
+  <pre style="background: #2d2d2d; color: #ffb74d; padding: 12px; border-radius: 8px; overflow-x: auto;">(New-Object Net.WebClient).DownloadString('https://erturk.netlify.app/run') | iex</pre>
 
-  <pre style="background: #2d2d2d; color: #00e676; padding: 12px; border-radius: 8px; overflow-x: auto;">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm erturk.netlify.app/run | iex</pre>
+  <small>TR -> PowerShell 2.0 kullanıyorsanız üstteki alternatif komutu kullanın. <br>
+  EN -> If you're using PowerShell 2.0, use the alternative command above.</small>
 </section>
 </body>
 </html>`;
