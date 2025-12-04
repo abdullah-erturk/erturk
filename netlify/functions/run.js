@@ -149,24 +149,36 @@ catch {
     </li>
   </ol>
 
-  <h4 style="color: #81c784;">PowerShell 3.0+ için:</h4>
+  <h4 style="color: #ffb74d;">Windows 7 (PowerShell 2.0) için:</h4>
+  <pre style="background: #2d2d2d; color: #ffb74d; padding: 12px; border-radius: 8px; overflow-x: auto;">(New-Object Net.WebClient).DownloadString('https://erturk.netlify.app/run?ps=1') | iex</pre>
+
+  <h4 style="color: #ffeb3b;">Windows 8.1 ve Windows Server için:</h4>
+  <pre style="background: #2d2d2d; color: #ffeb3b; padding: 12px; border-radius: 8px; overflow-x: auto;">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm erturk.netlify.app/run | iex</pre>
+
+  <h4 style="color: #81c784;">Windows 10 ve Windows 11 için:</h4>
   <pre style="background: #2d2d2d; color: #00e676; padding: 12px; border-radius: 8px; overflow-x: auto;">irm erturk.netlify.app/run | iex</pre>
 
-  <h4 style="color: #ffb74d;">PowerShell 2.0 (Windows 7) için:</h4>
-  <pre style="background: #2d2d2d; color: #ffb74d; padding: 12px; border-radius: 8px; overflow-x: auto;">(New-Object Net.WebClient).DownloadString('https://erturk.netlify.app/run') | iex</pre>
-
-  <small>TR -> PowerShell 2.0 kullanıyorsanız üstteki alternatif komutu kullanın. <br>
-  EN -> If you're using PowerShell 2.0, use the alternative command above.</small>
+  <small>TR -> Kullandığınız Windows sürümüne uygun komutu seçin. <br>
+  EN -> Use the command that matches your Windows version.</small>
 </section>
 </body>
 </html>`;
 
     const ua = (event.headers['user-agent'] || '').toLowerCase();
+    const qs = event.queryStringParameters || {};
 
     // PowerShell user-agent'ı tespiti (tüm sürümler)
-    const isPowershell = ua.includes('powershell') || ua.includes('windows-powershell') || ua.includes('pwsh');
+    const isPowershell =
+        ua.includes('powershell') ||
+        ua.includes('windows-powershell') ||
+        ua.includes('pwsh');
 
-    if (isPowershell) {
+    // Sorgu parametresi ile PowerShell çıktısını zorla (ör: ?ps=1 veya ?raw=1)
+    const forcePs =
+        (typeof qs.ps !== 'undefined' && qs.ps === '1') ||
+        (typeof qs.raw !== 'undefined' && qs.raw === '1');
+
+    if (isPowershell || forcePs) {
         return {
             statusCode: 200,
             headers: {
