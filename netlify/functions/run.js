@@ -149,17 +149,19 @@ catch {
     </li>
   </ol>
 
-  <h4 style="color: #ffb74d;">Windows 7 (PowerShell 2.0) için:</h4>
-  <pre style="background: #2d2d2d; color: #ffb74d; padding: 12px; border-radius: 8px; overflow-x: auto;">(New-Object Net.WebClient).DownloadString('https://erturk.netlify.app/run?ps=1') | iex</pre>
-
-  <h4 style="color: #ffeb3b;">Windows 8.1 ve Windows Server için:</h4>
-  <pre style="background: #2d2d2d; color: #ffeb3b; padding: 12px; border-radius: 8px; overflow-x: auto;">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm erturk.netlify.app/run | iex</pre>
-
-  <h4 style="color: #81c784;">Windows 10 ve Windows 11 için:</h4>
-  <pre style="background: #2d2d2d; color: #00e676; padding: 12px; border-radius: 8px; overflow-x: auto;">irm erturk.netlify.app/run | iex</pre>
 
   <small>TR -> Kullandığınız Windows sürümüne uygun komutu seçin. <br>
   EN -> Use the command that matches your Windows version.</small>
+  
+  <h4 style="color: #ffb74d;">Windows 7 (PowerShell 2.0):</h4>
+  <pre style="background: #2d2d2d; color: #ffb74d; padding: 12px; border-radius: 8px; overflow-x: auto;">(New-Object Net.WebClient).DownloadString('https://erturk.netlify.app/run?ps=1') | iex</pre>
+
+  <h4 style="color: #ffeb3b;">Windows 8.1 ve Windows Server:</h4>
+  <pre style="background: #2d2d2d; color: #ffeb3b; padding: 12px; border-radius: 8px; overflow-x: auto;">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm erturk.netlify.app/run | iex</pre>
+
+  <h4 style="color: #81c784;">Windows 10 ve Windows 11:</h4>
+  <pre style="background: #2d2d2d; color: #00e676; padding: 12px; border-radius: 8px; overflow-x: auto;">irm erturk.netlify.app/run | iex</pre>
+
 </section>
 </body>
 </html>`;
