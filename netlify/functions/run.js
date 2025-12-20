@@ -131,7 +131,9 @@ catch {
 </head>
 <body>
 <section style="font-family: Consolas, monospace; background: #1e1e1e; color: #e4e4e4; padding: 20px; border-radius: 10px; max-width: 950px; margin: 40px auto;">
-  <h3>TR: <br> Windows ve Office ürünlerini etkinleştirmek için PowerShell Multi Activation System hazır.</h3>
+	<div style="margin-bottom: 20px;">
+		<a href="https://erturk.netlify.app" style="display: inline-block; padding: 10px 20px; background: #4fc3f7; color: #1e1e1e; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s;">Ana Sayfa / Home</a>
+	</div>  <h3>TR: <br> Windows ve Office ürünlerini etkinleştirmek için PowerShell Multi Activation System hazır.</h3>
   <h3>EN: <br> PowerShell Multi Activation System is ready to activate Windows and Office products.</h3>
   <hr style="border: 1px solid #333; margin: 20px 0;">
 
