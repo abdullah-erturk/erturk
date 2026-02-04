@@ -1,78 +1,63 @@
-exports.handler = async function () {
-
-    const psScript = `# This code downloads the script file for the Turkish or English Windows Scan / Repair File.
-
+# TLS 1.2 (PowerShell 2.0 uyumlu)
 try {
     $tls12 = [Enum]::ToObject([Net.SecurityProtocolType], 3072)
     [Net.ServicePointManager]::SecurityProtocol =
         [Net.ServicePointManager]::SecurityProtocol -bor $tls12
 } catch {
     try {
-        $current = [Net.ServicePointManager]::SecurityProtocol.value__
-        [Net.ServicePointManager]::SecurityProtocol = $current -bor 3072
+        [Net.ServicePointManager]::SecurityProtocol =
+            [Net.ServicePointManager]::SecurityProtocol.value__ -bor 3072
     } catch {}
 }
 
-if (-not $args) {
-    Write-Host ''
-    Write-Host 'https://erturk.netlify.app' -ForegroundColor Green
-    Write-Host 'https://erturk.netlify.app/run' -ForegroundColor Green
-    Write-Host 'https://github.com/abdullah-erturk/scan_repair_windows' -ForegroundColor Green
-    Write-Host ''
-}
+# Bilgi
+Write-Host ''
+Write-Host 'https://erturk.netlify.app' -ForegroundColor Green
+Write-Host 'https://github.com/abdullah-erturk/scan_repair_windows' -ForegroundColor Green
+Write-Host ''
 
-$culture = $null
+# Dil tespiti
+$culture = 'en-US'
 try {
     $culture = (Get-UICulture).Name
 } catch {
     try {
-        $lcid = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Nls\\Language').Default
+        $lcid = (Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Nls\Language').Default
         $culture = [System.Globalization.CultureInfo]::GetCultureInfo([int]$lcid).Name
-    } catch {
-        $culture = 'en-US'
-    }
+    } catch {}
 }
 
-$url = 'https://raw.githubusercontent.com/abdullah-erturk/scan_repair_windows/refs/heads/main/check.bat'
+# İndirilecek dosya
+$url = 'https://raw.githubusercontent.com/abdullah-erturk/scan_repair_windows/main/check.bat'
 
 if ($culture -like 'tr-*') {
-    Write-Host 'Turkish system detected. Downloading script...' -ForegroundColor Cyan
+    Write-Host 'Turkish system detected.' -ForegroundColor Cyan
 } else {
-    Write-Host 'Non-Turkish system detected. Downloading script...' -ForegroundColor Yellow
+    Write-Host 'Non-Turkish system detected.' -ForegroundColor Yellow
 }
 
+# Geçici dosya
 $guid = [guid]::NewGuid().ToString('N')
-$filename = "$env:TEMP\\check_$guid.bat"
+$file = "$env:TEMP\check_$guid.bat"
 
 try {
-    $wc = New-Object System.Net.WebClient
-    $wc.DownloadFile($url, $filename)
+    $wc = New-Object Net.WebClient
+    $wc.DownloadFile($url, $file)
     $wc.Dispose()
-    Write-Host "Script downloaded: $filename" -ForegroundColor Green
+    Write-Host "Downloaded: $file" -ForegroundColor Green
 } catch {
     Write-Host 'Download failed.' -ForegroundColor Red
     exit 1
 }
 
+# Çalıştır
 try {
-    Start-Process cmd.exe -ArgumentList "/c", $filename -Wait
+    Start-Process cmd.exe -ArgumentList "/c", $file -Wait
 } catch {
     Write-Host 'Execution failed.' -ForegroundColor Red
 }
 
+# Temizlik
 try {
-    Remove-Item $filename -Force
-    Write-Host 'Temporary file deleted.'
+    Remove-Item $file -Force
 } catch {}
-`;
-
-    return {
-        statusCode: 200,
-        headers: {
-            'Content-Type': 'text/plain; charset=utf-8',
-            'Cache-Control': 'no-cache',
-            'X-Content-Type-Options': 'nosniff'
-        },
-        body: psScript
-    };
-};
