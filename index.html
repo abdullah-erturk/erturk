@@ -324,20 +324,25 @@
 <div class="container">
 
 <div class="card">
+<h2><i class="fa-solid fa-cloud-arrow-down"></i>Acronis True Image 2026 Build 42902 Portable <br>(for Live & WinPE)</h2>
+<p><a href="https://mega.nz/folder/tUhznB6T#s9yjwua2YIjf5YhhTKMwIg" target="_blank" class="github-link mega-link"><i class="fa-brands fa-github"></i> Mega Link</a></p>
+</div>
+
+<div class="card">
 <h2><i class="fa-solid fa-bolt"></i> Academia & Scribd Downloader </h2>
 <p><a href="https://github.com/abdullah-erturk/Academia-Scribd-Downloader" target="_blank" class="github-link"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
 </div>
-	
+
 <div class="card">
 <h2><i class="fa-solid fa-heart-pulse"></i> Ping Monitor Enterprise </h2>
 <p><a href="https://github.com/abdullah-erturk/Ping-Monitor" target="_blank" class="github-link"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
 </div>
-	
+
 <div class="card">
 <h2><i class="fa-solid fa-desktop"></i> RDP (wfreerdp) Connection Tool </h2>
 <p><a href="https://github.com/abdullah-erturk/RDP-wfreerdp-Connection-Tool" target="_blank" class="github-link"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
 </div>
-	
+
 <div class="card">
 <h2><i class="fa-solid fa-network-wired"></i> NetScan — Network Inventory Scanner </h2>
 <p><a href="https://github.com/abdullah-erturk/Network-Inventory-Scanner/" target="_blank" class="github-link"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
@@ -510,6 +515,9 @@ function applyLanguage(lang){
   });
 
 	document.querySelectorAll('.github-link').forEach(el => {
+	  // Mega link ise hem yazıyı hem ikonu değiştirme
+	  if(el.classList.contains('mega-link')) return;
+
 	  el.innerHTML = `<i class="fa-brands fa-github"></i> ${t.githubLink}`;
 	});
   document.querySelector('.player-title').textContent = t.playerTitle;
