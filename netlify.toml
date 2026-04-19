@@ -10,3 +10,9 @@
   to = "/.netlify/functions/run"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/history"
+  to = "https://gemini.google.com/share/cc5aaaca736e"
+  status = 302
+  force = true
