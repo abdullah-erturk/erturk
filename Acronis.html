@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,23 +32,29 @@
         }
 
         /* Buzlu cam efektini patlatacak dekoratif parlama alanları */
-        body::before, body::after {
+        body::before,
+        body::after {
             content: "";
             position: fixed;
-            width: 600px; height: 600px;
+            width: 600px;
+            height: 600px;
             border-radius: 50%;
             filter: blur(120px);
             z-index: -1;
             opacity: 0.15;
             pointer-events: none;
         }
+
         body::before {
-            top: -200px; left: -100px;
+            top: -200px;
+            left: -100px;
             background: var(--primary);
         }
+
         body::after {
-            bottom: -100px; right: -100px;
-            background: #8b5cf6; 
+            bottom: -100px;
+            right: -100px;
+            background: #8b5cf6;
         }
 
         .container {
@@ -83,7 +90,9 @@
         }
 
         @media (max-width: 768px) {
-            .grid { grid-template-columns: 1fr; }
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .card {
@@ -94,9 +103,11 @@
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 
+            box-shadow:
                 0 10px 30px rgba(0, 0, 0, 0.2),
                 inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
         }
 
         .card:hover {
@@ -113,7 +124,9 @@
             font-size: 1.5rem;
         }
 
-        .card h2 span { font-size: 1.2rem; }
+        .card h2 span {
+            font-size: 1.2rem;
+        }
 
         ul {
             list-style: none;
@@ -136,7 +149,8 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            margin-top: 20px;
+            margin-top: auto;
+            padding-top: 20px;
         }
 
         .badge {
@@ -175,8 +189,15 @@
         }
 
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .tech-info {
@@ -192,17 +213,33 @@
             box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
         }
 
-        .tech-info b { color: var(--text); }
+        .tech-info b {
+            color: var(--text);
+        }
+
+        code {
+            color: #ff5f5f;
+            background: rgba(255, 95, 95, 0.1);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+            border: 1px solid rgba(255, 95, 95, 0.2);
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>Acronis True Image 2026 Launcher v2 (fixed)</h1>
             <p class="subtitle">WinPE & Windows</p>
-            <div style="margin-top: 5px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;">
-                <p style="width: 100%; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-dim);">Made with ❤️ by <strong>Abdullah ERTÜRK</strong></p>
-                <a href="https://github.com/abdullah-erturk" class="btn" style="margin-top: 0;" target="_blank">GitHub</a>
+            <div
+                style="margin-top: 5px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;">
+                <p style="width: 100%; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-dim);">Made with ❤️ by
+                    <strong>Abdullah ERTÜRK</strong></p>
+                <a href="https://github.com/abdullah-erturk" class="btn" style="margin-top: 0;"
+                    target="_blank">GitHub</a>
                 <a href="https://erturk.netlify.app" class="btn" style="margin-top: 0;" target="_blank">Website</a>
             </div>
         </header>
@@ -214,8 +251,9 @@
                 <ul>
                     <li><strong>Hibrit Sistem Desteği:</strong> WinPE ve Normal Windows ortamlarını otomatik tespit eder, sorunsuz geçiş yapar.</li>
                     <li><strong>Bağımsız Çalışma:</strong> WinPE altında <code>sc.exe</code> veya <code>powershell</code> gerektirmez, doğrudan registry üzerinden çalışır.</li>
-                    <li><strong>Dahili Aktivasyon:</strong> Lisans verileri başlatıcıya gömülüdür; harici Config dosyası olmadan tam sürüm olarak açılır.</li>
+                    <li><strong>Dahili Aktivasyon:</strong> Lisans verileri <code>Acronis Launcher.exe</code> dosyasına gömülüdür, tam sürüm olarak açılır.</li>
                     <li><strong>Filtre Yönetimi:</strong> Sürücü filtrelerini (snapman, fltsrv) sistem stabilitesini bozmadan anında enjekte eder.</li>
+                    <li><strong>Çalıştırma İşlemi:</strong> Uygulama mutlaka özel olarak hazırlanmış olan <code>Acronis Launcher.exe</code> dosyası üzerinden çalıştırılmalıdır.</li>
                 </ul>
                 <div class="badges">
                     <span class="badge">WinPE Desteği</span>
@@ -230,8 +268,9 @@
                 <ul>
                     <li><strong>Hybrid Support:</strong> Automatically detects WinPE and Live Windows environments for seamless execution.</li>
                     <li><strong>Zero Dependencies:</strong> Functions without <code>sc.exe</code> or <code>powershell</code> in WinPE mode using direct registry logic.</li>
-                    <li><strong>Internal Activation:</strong> License and activation data are hardcoded; runs in full version mode without external files.</li>
+                    <li><strong>Internal Activation:</strong> The license data is embedded in the <code>Acronis Launcher.exe</code> file; it opens as the full version.</li>
                     <li><strong>Filter Management:</strong> Instantly injects driver filters (snapman, fltsrv) without compromising system stability.</li>
+                    <li><strong>Operation process:</strong> The application must be launched via the specifically created <code>Acronis Launcher.exe</code> file.</li>
                 </ul>
                 <div class="badges">
                     <span class="badge">WinPE Support</span>
@@ -242,10 +281,11 @@
         </div>
 
         <div class="tech-info">
-            <p><b>Teknik Not:</b> Bu başlatıcı; hem saf (stock) hem de modifiye edilmiş tüm WinPE (Sergei, Anhdv, BlueCon, ActiveData vb.) ve Windows sürümleriyle tam uyumludur. Sürücü yükleme hatalarını (0x100005) gidermek için özel HEX enjeksiyon yöntemleri kullanır.</p>
-            <p style="margin-top: 5px;"><b>Technical Note:</b> This launcher is fully compatible with all Windows versions and WinPE environments (Sergei, Anhdv, BlueCon, ActiveData etc. both stock and custom/lite builds). It utilizes specialized HEX injection methods to resolve driver loading errors (0x100005).</p>
+            <p><b>Teknik Not:</b> Bu başlatıcı; hem saf (stock) hem de modifiye edilmiş tüm WinPE (Sergei, Anhdv, BlueCon, ActiveData vb.) ve Windows sürümleriyle tam uyumludur. Sürücü yükleme hatalarını (0x100005) gidermek için özel HEX enjeksiyon yöntemleri kullanır. <b>Online Windows ortamında geri yükleme yapılamaz, bu işlem için WinPE gereklidir.</b></p>
+            <p style="margin-top: 5px;"><b>Technical Note:</b> This launcher is fully compatible with all Windows versions and WinPE environments (Sergei, Anhdv, BlueCon, ActiveData etc.). It utilizes specialized HEX injection methods to resolve driver loading errors (0x100005). <b>Restoration cannot be performed in an Online Windows environment; WinPE is required for this process.</b></p>
         </div>
 
     </div>
 </body>
+
 </html>
