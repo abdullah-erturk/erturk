@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acronis True Image 2026 Launcher - ReadMe</title>
+    <style>
+        :root {
+            --primary: #14b8a6;
+            --primary-dark: #0d9488;
+            --bg: #0b0f19;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --shadow: rgba(20, 184, 166, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Buzlu cam efektini patlatacak dekoratif parlama alanları */
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        body::before {
+            top: -200px; left: -100px;
+            background: var(--primary);
+        }
+        body::after {
+            bottom: -100px; right: -100px;
+            background: #8b5cf6; 
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .card h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .card h2 span { font-size: 1.2rem; }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .badge {
+            background: rgba(20, 184, 166, 0.15);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid rgba(20, 184, 166, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 0 20px rgba(20, 184, 166, 0.4);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tech-info {
+            margin-top: 30px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .tech-info b { color: var(--text); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Acronis True Image 2026 Launcher v2 (fixed)</h1>
+            <p class="subtitle">WinPE & Windows</p>
+            <div style="margin-top: 5px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;">
+                <p style="width: 100%; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-dim);">Made with ❤️ by <strong>Abdullah ERTÜRK</strong></p>
+                <a href="https://github.com/abdullah-erturk" class="btn" style="margin-top: 0;" target="_blank">GitHub</a>
+                <a href="https://erturk.netlify.app" class="btn" style="margin-top: 0;" target="_blank">Website</a>
+            </div>
+        </header>
+
+        <div class="grid">
+            <!-- Turkish Section -->
+            <div class="card">
+                <h2>Türkçe Sürüm Notları</h2>
+                <ul>
+                    <li><strong>Hibrit Sistem Desteği:</strong> WinPE ve Normal Windows ortamlarını otomatik tespit eder, sorunsuz geçiş yapar.</li>
+                    <li><strong>Bağımsız Çalışma:</strong> WinPE altında <code>sc.exe</code> veya <code>powershell</code> gerektirmez, doğrudan registry üzerinden çalışır.</li>
+                    <li><strong>Dahili Aktivasyon:</strong> Lisans verileri başlatıcıya gömülüdür; harici Config dosyası olmadan tam sürüm olarak açılır.</li>
+                    <li><strong>Filtre Yönetimi:</strong> Sürücü filtrelerini (snapman, fltsrv) sistem stabilitesini bozmadan anında enjekte eder.</li>
+                </ul>
+                <div class="badges">
+                    <span class="badge">WinPE Desteği</span>
+                    <span class="badge">Tam Sürüm</span>
+                    <span class="badge">Taşınabilir</span>
+                </div>
+            </div>
+
+            <!-- English Section -->
+            <div class="card">
+                <h2>English Release Notes</h2>
+                <ul>
+                    <li><strong>Hybrid Support:</strong> Automatically detects WinPE and Live Windows environments for seamless execution.</li>
+                    <li><strong>Zero Dependencies:</strong> Functions without <code>sc.exe</code> or <code>powershell</code> in WinPE mode using direct registry logic.</li>
+                    <li><strong>Internal Activation:</strong> License and activation data are hardcoded; runs in full version mode without external files.</li>
+                    <li><strong>Filter Management:</strong> Instantly injects driver filters (snapman, fltsrv) without compromising system stability.</li>
+                </ul>
+                <div class="badges">
+                    <span class="badge">WinPE Support</span>
+                    <span class="badge">Full Version</span>
+                    <span class="badge">Portable</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tech-info">
+            <p><b>Teknik Not:</b> Bu başlatıcı; hem saf (stock) hem de modifiye edilmiş tüm WinPE (Sergei, Anhdv, BlueCon, ActiveData vb.) ve Windows sürümleriyle tam uyumludur. Sürücü yükleme hatalarını (0x100005) gidermek için özel HEX enjeksiyon yöntemleri kullanır.</p>
+            <p style="margin-top: 5px;"><b>Technical Note:</b> This launcher is fully compatible with all Windows versions and WinPE environments (Sergei, Anhdv, BlueCon, ActiveData etc. both stock and custom/lite builds). It utilizes specialized HEX injection methods to resolve driver loading errors (0x100005).</p>
+        </div>
+
+    </div>
+</body>
+</html>

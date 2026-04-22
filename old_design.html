@@ -9,399 +9,242 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-  :root {
-    --primary: #14b8a6;
-    --primary-dark: #0d9488;
-    --bg: #f8fafc;
-    --card-bg: rgba(255, 255, 255, 0.4); /* Daha saydam yaparak cam etkisini artırdım */
-    --text: #1e293b;
-    --text-dim: #64748b;
-    --border: rgba(0, 0, 0, 0.06); /* Beyaz temada sınırları belirginleştiren ince kenarlık */
-    --shadow: rgba(20, 184, 166, 0.08);
-    --icon: #14b8a6;
+  :root{
+    --bg:#fff8e7; --text:#222; --card:#fff;
+    --icon:#b30000; --icon-strong:#ff0000;
+    --shadow: rgba(0,0,0,0.12);
+  }
+  body.dark{
+    --bg:#2E1F1F; --text:#f2f2f2; --card:#1e1e1e;
+    --icon:#ff4d4d; --icon-strong:#ff8080;
+    --shadow: rgba(0,0,0,0.6);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    transition: background .30s, color .30s;
   }
 
-  body.dark {
-    --bg: #0b0f19;
-    --card-bg: rgba(255, 255, 255, 0.05);
-    --text: #f1f5f9;
-    --text-dim: #94a3b8;
-    --shadow: rgba(0, 0, 0, 0.3);
-    --border: rgba(255, 255, 255, 0.1);
-  }
-
-  * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    transition: background 0.4s ease, color 0.4s ease;
-    line-height: 1.6;
-    padding-left: 0; /* Dinamik olarak mobilde sıfırlanacak */
-    overflow-x: hidden;
-    position: relative;
-  }
-
-  /* Buzlu cam efektini patlatacak dekoratif parlama alanları */
-  body::before, body::after {
-    content: "";
+  /* THEME TOGGLE (sağ üst) */
+  .theme-toggle{
     position: fixed;
-    width: 600px; height: 600px;
-    border-radius: 50%;
-    filter: blur(120px);
-    z-index: -1;
-    opacity: 0.25; /* Beyaz temada camın arkasındaki renklerin daha çok belli olması için artırıldı */
-    pointer-events: none;
+    top: 14px;
+    right: 18px;
+    width:42px; height:42px;
+    border-radius:50%;
+    border:none; cursor:pointer;
+    background:var(--card);
+    box-shadow: 0 4px 14px var(--shadow);
+    display:flex; align-items:center; justify-content:center;
+    z-index:9998; transition: transform .24s;
   }
-  body::before {
-    top: -200px; left: -100px;
-    background: var(--primary);
-  }
-  body::after {
-    bottom: -100px; right: -100px;
-    background: #8b5cf6; /* Mor tonu */
-  }
+  .theme-toggle:hover{ transform: scale(1.06); }
+  .theme-toggle i{ color:var(--icon); font-size:18px; }
 
-  /* THEME TOGGLE */
-  .theme-toggle {
+  /* LANGUAGE TOGGLE (tema butonunun solunda) */
+  .language-toggle{
     position: fixed;
-    top: 30px;
-    right: 20px;
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 15px var(--shadow);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 9998; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .theme-toggle:hover { transform: translateY(-2px); border-color: var(--primary); }
-  .theme-toggle i { color: var(--primary); font-size: 20px; }
-
-  /* LANGUAGE TOGGLE */
-  .language-toggle {
-    position: fixed;
-    top: 30px;
-    right: 80px;
+    top: 14px;
+    right: 70px;
     display: flex;
     gap: 8px;
     z-index: 9998;
   }
-
-  .language-toggle button {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
+  .language-toggle button{
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
     cursor: pointer;
-    background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 15px var(--shadow);
+    background: var(--card);
+    box-shadow: 0 4px 14px var(--shadow);
     font-weight: 600;
     font-size: 13px;
     color: var(--text);
-    transition: all 0.3s ease;
+    transition: transform .24s, background .24s;
   }
-
-  .language-toggle button:hover { transform: translateY(-2px); border-color: var(--primary); }
-  .language-toggle button.active {
-    background: var(--primary);
+  .language-toggle button:hover{
+    transform: scale(1.06);
+  }
+  .language-toggle button.active{
+    background: var(--icon);
     color: white;
-    border-color: var(--primary);
   }
 
-  /* PLAYER */
-  .player {
+  /* PLAYER (sol üst, daha küçük) */
+  .player{
     position: fixed;
-    top: 20px;
-    left: 20px;
+    top: 14px;
+    left: 18px;
     width: 240px;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 12px;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 10px 30px var(--shadow);
-    z-index: 9999;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 13px;
+    background: var(--card);
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 8px 24px var(--shadow);
+    z-index:9999;
+    transition: all .30;
+    font-size:13px;
   }
-
-  .player.minimized {
-    width: 60px; height: 60px;
-    padding: 10px;
-    border-radius: 16px;
-    overflow: hidden;
+  /* minimize toggle (küçültülebilir) */
+  .player.minimized{ 
+    width: 48px; 
+    height: 48px;
+    padding:6px; 
+    overflow:hidden;
   }
-
-  .player.minimized .player-header {
+  .player.minimized .player-header{
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
-
   .player.minimized .player-title,
   .player.minimized .player-track,
   .player.minimized .player-controls,
   .player.minimized .player-progress,
   .player.minimized .player-time,
-  .player.minimized .playlist {
+  .player.minimized .playlist{
     display: none !important;
   }
-
-  .player.minimized #minimizeBtn {
-    display: none;
+  .player.minimized .logo{
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
   }
-  .player.minimized .logo {
-    width: 38px; height: 38px;
-    font-size: 16px;
-    margin: 0;
-    cursor: pointer;
-    background: var(--primary);
-    color: white;
+  .player.minimized #minimizeBtn{
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    padding: 2px;
   }
+  .player-header{ display:flex; gap:8px; align-items:center; }
+  .player .logo{ width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01)); color:var(--icon); font-size:15px;}
+  .player-title{ font-weight:600; font-size:13px; }
+  .player-track{ margin-top:4px; font-size:12px; color:var(--text); opacity:.95; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-  .player-header { display: flex; gap: 12px; align-items: center; margin-bottom: 5px; }
-  .player .logo {
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(20, 184, 166, 0.1);
-    color: var(--primary);
-    font-size: 18px;
+  .player-controls{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; gap:6px;}
+  .player-controls .left{ display:flex; gap:6px; align-items:center;}
+  .player-controls button{
+    border: none; background:transparent; padding:6px; border-radius:8px; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center;
+    transition: background .24s, transform .08s;
   }
+  .player-controls button:hover{ background: rgba(0,0,0,0.04); transform: translateY(-2px); }
+  .player-controls i{ font-size:14px; color:var(--icon); }
 
-  .player-title { font-weight: 700; color: var(--primary); }
-  .player-track { margin-top: 4px; font-size: 12px; color: var(--text-dim); }
+  .player-progress{ margin-top:8px; width:100%; height:6px; background: rgba(0,0,0,0.06); border-radius:6px; cursor:pointer; position:relative; }
+  .player-progress .bar{ height:100%; width:0%; border-radius:6px; background: linear-gradient(90deg,var(--icon),var(--icon-strong)); transition:width .18s linear; }
 
-  .player-controls { display: flex; align-items: center; justify-content: space-between; margin-top: 15px; }
-  .player-controls .left { display: flex; gap: 10px; }
-  .player-controls button {
-    border: none; background: transparent; padding: 8px; border-radius: 10px; cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    transition: all 0.2s ease;
-  }
+  .player-time{ display:flex; justify-content:space-between; font-size:11px; margin-top:6px; opacity:.85; color:var(--text); }
 
-  .player-controls button:hover { background: rgba(20, 184, 166, 0.1); transform: scale(1.1); }
-  .player-controls i { font-size: 16px; color: var(--primary); }
+  .playlist{ margin-top:8px; padding:6px; border-radius:8px; background: rgba(0,0,0,0.02); font-size:13px; }
+  .playlist ul{ list-style:none; margin:0; padding:0; }
+  .playlist li{ padding:6px 8px; border-radius:6px; cursor:pointer; display:flex; gap:8px; align-items:center; transition: background .24s; }
+  .playlist li:hover{ background: rgba(0,0,0,0.04); }
+  .playlist li.active{ background: linear-gradient(90deg, rgba(179,0,0,0.09), rgba(255,0,0,0.04)); }
 
-  .player-progress {
-    margin-top: 15px; width: 100%; height: 6px;
-    background: rgba(20, 184, 166, 0.1);
-    border-radius: 6px; cursor: pointer; position: relative;
-  }
-
-  .player-progress .bar {
-    height: 100%; width: 0%; border-radius: 6px;
-    background: var(--primary);
-    transition: width 0.1s linear;
-  }
-
-  .player-time { display: flex; justify-content: space-between; font-size: 11px; margin-top: 8px; color: var(--text-dim); }
-
-  .playlist {
-    margin-top: 15px; padding: 0;
-    border: none;
-    background: transparent;
-    max-height: 180px; overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .playlist ul { margin: 0; padding: 0 0 10px 0; list-style: none; }
-  .playlist::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
-
-  .playlist li {
-    padding: 4px 10px; border-radius: 8px; cursor: pointer;
-    display: flex; gap: 8px; align-items: center; justify-content: flex-start;
-    transition: all 0.2s ease;
-    font-size: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
-  }
-
-  .playlist li:hover { background: rgba(20, 184, 166, 0.1); color: var(--primary); }
-  .playlist li.active { background: rgba(20, 184, 166, 0.15); color: var(--primary); font-weight: 600; }
+  /* Upload button (gizli input) */
+  .file-upload{ display:inline-block; }
+  .file-upload input{ display:none; }
 
   /* MAIN CONTENT */
-  h1 {
-    text-align: center;
-    margin: 24px auto 40px;
-    font-size: 2.5rem;
-    font-weight: 800;
-    max-width: 920px;
-    letter-spacing: -1px;
-    background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
+  h1{ text-align:center; margin: 86px 0 18px; }
+  
+  /* Yeni eklenen intro bölümü */
   .intro {
-    max-width: 920px;
-    margin: 0 auto 50px 280px;
-    padding: 35px;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    box-shadow: 
-      0 10px 30px var(--shadow),
-      inset 0 0 0 2px rgba(255, 255, 255, 0.1);
-    text-align: left;
-  }
-
-  .intro p { margin: 12px 0; color: var(--text-dim); font-size: 1.1rem; }
-  .intro strong { color: var(--text); }
-
-  .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto 40px;
     padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto 80px;
-  }
-
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 15px 20px;
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex; flex-direction: column; justify-content: center;
-    min-height: 100px;
-    box-shadow: 
-      0 4px 15px var(--shadow),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-  }
-
-  .card:hover {
-    transform: translateY(-8px);
-    border-color: var(--primary);
-    box-shadow: 0 15px 40px var(--shadow);
-  }
-
-  .card h2 {
-    margin: 0 0 12px;
-    display: flex; align-items: center; gap: 10px;
-    font-size: 1.1rem; font-weight: 700;
-    color: #ffa500; /* Turuncu başlıklar */
-    line-height: 1.3;
-  }
-
-  a.github-link {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 18px; border-radius: 12px;
-    background: rgba(0, 118, 254, 0.1);
-    color: var(--primary);
-    font-weight: 600; font-size: 0.9rem;
-    transition: all 0.3s ease;
-  }
-
-  a.github-link:hover {
-    background: var(--primary);
-    color: white;
-    text-decoration: none;
-    transform: scale(1.05);
-  }
-
-  /* CUSTOM BUTTONS */
-  .btn-history {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 24px; border-radius: 14px;
-    background: var(--primary);
-    color: white; font-weight: 700;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);
-    text-decoration: none;
-  }
-
-  .btn-history:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(20, 184, 166, 0.4);
-    text-decoration: none;
-  }
-
-  .info-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--primary);
-    color: white;
-    padding: 8px 16px;
+    background: var(--card);
     border-radius: 12px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px var(--shadow);
+    box-shadow: 0 6px 18px var(--shadow);
+    line-height: 1.8;
+  }
+  .intro p {
+    margin: 8px 0;
+  }
+  
+  .container{
+    display:grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap:18px;
+    justify-content:center;
+    padding: 18px;
+    max-width:1200px;
+    margin: 0 auto 60px;
   }
 
-  .info-link:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px var(--shadow);
-    color: white;
+  .card{
+    width:100%;
+    background:var(--card);
+    border-radius:12px;
+    box-shadow: 0 6px 18px var(--shadow);
+    padding:18px;
+    transition: transform .30s, box-shadow .30s;
+  }
+  .card:hover{ transform: translateY(-6px); box-shadow: 0 12px 30px var(--shadow); }
+  .card h2{ margin:0 0 8px; display:flex; align-items:center; gap:8px; font-size:16px;}
+  .card h2 i{ color:var(--icon); }
+
+  a{ color:var(--text); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+
+  /* small screens */
+  @media(max-width:420px){
+    .player{ left:8px; top:10px; width:92%; }
+    .container{ grid-template-columns: repeat(4, 1fr); }
+    .intro { margin: 0 12px 30px; }
   }
 
-  /* VIEW TRANSITION API (Modern Tema Geçişi) */
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
-  }
+  /* --- Mobil görünüm düzeltmeleri --- */
+  @media(max-width: 768px) {
 
-  ::view-transition-old(root) {
-    z-index: 1;
-  }
+    /* Player sabit kalacak ama introya taşmayacak */
+    .player {
+      position: relative;
+      top: auto;
+      left: auto;
+      width: 100%;
+      margin: 10px auto;
+      z-index: 10;
+    }
 
-  ::view-transition-new(root) {
-    z-index: 9999;
-  }
+    /* Intro kısmı taşma yapmasın */
+    .intro {
+      white-space: normal !important;
+      overflow-x: visible !important;
+      max-width: 95%;
+      margin: 10px auto 30px;
+      padding: 12px;
+    }
 
-  /* MEDIA QUERIES */
-  @media (max-width: 768px) {
-    body { padding-left: 0; }
-    body::before, body::after { display: none; } /* Mobilde performans için glowları gizle */
-    
-    .player { 
-      position: relative; top: 0; left: 0; 
-      width: calc(100% - 20px); 
-      margin: 10px auto 20px; 
+    /* Kartlar alt alta dizilsin, hepsi görünsün */
+    .container {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+      gap: 14px !important;
+      padding: 10px;
+    }
+
+    /* Kart içeriği daha kompakt */
+    .card {
+      font-size: 15px;
+      padding: 14px;
+    }
+
+    /* Tema butonu ekranın sağ üstünde sabit kalsın */
+    .theme-toggle {
+      top: 10px;
+      right: 10px;
+      z-index: 9999;
     }
     
-    h1 { 
-      font-size: 1.8rem; 
-      margin: 30px 10px 20px; 
-      padding: 0 50px; /* Butonlara çarpmaması için yanlardan pay */
+    /* Dil butonları mobilde */
+    .language-toggle {
+      top: 10px;
+      right: 62px;
     }
-    
-    .intro { 
-      margin: 0 15px 30px; 
-      padding: 20px; 
-      border-radius: 20px;
-    }
-    
-    .container { grid-template-columns: 1fr; gap: 15px; padding: 15px; }
-    .card { min-height: 120px; padding: 18px; }
-    
-    .theme-toggle { top: 10px; right: 10px; width: 40px; height: 40px; }
-    .language-toggle { top: 10px; right: 60px; }
-    .language-toggle button { width: 40px; height: 40px; }
   }
 </style>
 </head>
@@ -416,8 +259,8 @@
       <div class="player-track" id="currentTrack">— Bekleniyor —</div>
     </div>
     <!-- minimize button -->
-    <button id="minimizeBtn" title="Küçült" style="border:none;background:transparent;cursor:pointer;padding:4px;margin-left:auto;">
-      <i class="fa-solid fa-window-minimize" style="color:var(--primary);font-size:14px;transform:translateY(-5px);"></i>
+    <button id="minimizeBtn" title="Küçült" style="border:none;background:transparent;cursor:pointer;padding:4px;">
+      <i class="fa-solid fa-chevron-up" style="color:var(--icon);font-size:12px;"></i>
     </button>
   </div>
 
@@ -429,8 +272,16 @@
       <button id="nextBtn" title="Sonraki"><i class="fa-solid fa-forward-step"></i></button>
     </div>
 
-    <div style="display:flex; align-items:center;">
+    <div style="display:flex; align-items:center; gap:6px;">
       <button id="shuffleBtn" title="Karıştır"><i class="fa-solid fa-shuffle"></i></button>
+
+      <!-- Dosya yükleme düğmesi -->
+      <div class="file-upload">
+        <input id="fileInput" type="file" accept="audio/*" multiple />
+        <label for="fileInput" style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:6px;border-radius:8px;transition:background .24s;">
+          <i class="fa-solid fa-folder-open" style="color:var(--icon);font-size:14px;"></i>
+        </label>
+      </div>
     </div>
   </div>
 
@@ -461,43 +312,39 @@
 
 <h1><i class="fa-solid fa-terminal" style="margin-right:24px;"></i>Abdullah Ertürk</h1>
 
-<div class="intro">
+<div class="intro" style="max-width:710px; white-space:nowrap; overflow-x:auto; padding:4px;">
   <p id="intro1">👋 Merhaba, ben Abdullah</p>
   <p id="intro2">👀 Bilgisayarları ve bilişimi seviyorum.</p>
   <p id="intro3">🌱 Komut script dillerine (bat, cmd, vbs, ps1) özel bir ilgim var. Şu anda öğreniyorum.</p>
   <p id="intro4">💞️ Her zaman yeni başlayan biriyim, bu yüzden öğrenmeye daha açığım.</p>
   <p><i class="fa-brands fa-github" style="margin-right:6px"></i><span id="intro5">Projelerimi beğenirseniz Github üzerinden oy verin ya da bana bir kahve ısmarlayın ☕</span></p>
-  <a href="https://buymeacoffee.com/abdullaherturk" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 160px !important; border-radius: 8px;" ></a>
-  <div style="margin-top: 20px;">
-    <a id="historyBtn" href="https://erturk.netlify.app/history" target="_blank" class="btn-history">
-      <span style="font-size:18px;">⏳</span>
+  <a href="https://buymeacoffee.com/abdullaherturk" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 160px !important;" ></a>
+  <div style="margin-top: 10px;">
+    <a id="historyBtn" href="https://erturk.netlify.app/history" target="_blank" style="
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 7px 14px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--icon), var(--icon-strong));
+      color: #fff; font-weight: 600; font-size: 13px;
+      text-decoration: none; letter-spacing: 0.2px;
+      box-shadow: 0 3px 10px var(--shadow);
+      transition: transform .22s, box-shadow .22s;
+    " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='';this.style.boxShadow='0 3px 10px var(--shadow)'">
+      <span style="font-size:15px;">⏳</span>
       <span id="historyBtnText">Tarihe Dokun</span>
     </a>
   </div>
 </div>
 
 <div class="container">
-	
-<div class="card">
-<h2><i class="fa-solid fa-cloud-arrow-down"></i>Acronis True Image 2026 Build 42934 Portable <br>(for Live & WinPE)</h2>
-        <div style="display: flex; gap: 15px; align-items: center; justify-content: flex-start; margin-top: 15px;">
-          <a href="https://mega.nz/file/p01igKxD#JdAnfU7G_F-S-S3fK4s-S3fK4s-S3fK4s-S3fK4s" class="github-link mega-link" target="_blank" style="margin-top:0;">
-            <i class="fa-solid fa-cloud-arrow-down"></i> Mega Link
-          </a>
-          <a href="Acronis.html" class="info-link" target="_blank">
-            <i class="fa-solid fa-circle-info"></i> Bilgi
-          </a>
-        </div>
-</div>
-
-<div class="card">
-<h2><i class="fa-solid fa-hard-drive"></i> Windows Backup & Restore Tool (C#)</h2>
-<p><a href="https://github.com/abdullah-erturk/Windows-Backup-Restore-Tool" target="_blank" class="github-link"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
-</div>
 
 <div class="card">
 <h2><i class="fa-solid fa-hard-drive"></i> Diskpart GUI </h2>
 <p><a href="https://github.com/abdullah-erturk/Diskpart-GUI" target="_blank" class="github-link"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+	
+<div class="card">
+<h2><i class="fa-solid fa-cloud-arrow-down"></i>Acronis True Image 2026 Build 42902 Portable <br>(for Live & WinPE)</h2>
+<p><a href="https://mega.nz/folder/tUhznB6T#s9yjwua2YIjf5YhhTKMwIg" target="_blank" class="github-link mega-link"><i class="fa-brands fa-github"></i> Mega Link</a></p>
 </div>
 
 <div class="card">
@@ -518,6 +365,11 @@
 <div class="card">
 <h2><i class="fa-solid fa-network-wired"></i> NetScan — Network Inventory Scanner </h2>
 <p><a href="https://github.com/abdullah-erturk/Network-Inventory-Scanner/" target="_blank" class="github-link"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
+</div>
+	
+<div class="card">
+<h2><i class="fa-solid fa-hard-drive"></i> Windows Backup & Restore Tool (C#)</h2>
+<p><a href="https://github.com/abdullah-erturk/Windows-Backup-Restore-Tool" target="_blank" class="github-link"><i class="fa-brands fa-github"></i> GitHub'da Görüntüle</a></p>
 </div>
 
 <div class="card">
@@ -633,7 +485,6 @@ const translations = {
     intro5: 'Projelerimi beğenirseniz Github üzerinden oy verin ya da bana bir kahve ısmarlayın ☕',
     historyBtn: 'Tarihe Dokun',
     githubLink: "GitHub'da Görüntüle",
-    infoLink: "Bilgi",
     playerTitle: 'Mini Player',
     playerWaiting: '— Bekleniyor —',
     minimizeBtn: 'Küçült',
@@ -653,7 +504,6 @@ const translations = {
     intro5: 'If you like my projects, vote on GitHub or buy me a coffee ☕',
     historyBtn: 'Touch History',
     githubLink: 'View on GitHub',
-    infoLink: "Info",
     playerTitle: 'Mini Player',
     playerWaiting: '— Waiting —',
     minimizeBtn: 'Minimize',
@@ -693,9 +543,6 @@ function applyLanguage(lang){
 
 	  el.innerHTML = `<i class="fa-brands fa-github"></i> ${t.githubLink}`;
 	});
-    document.querySelectorAll('.info-link').forEach(el => {
-      el.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${t.infoLink}`;
-    });
   document.querySelector('.player-title').textContent = t.playerTitle;
   ['minimizeBtn','prevBtn','playPauseBtn','stopBtn','nextBtn','shuffleBtn','progress','themeToggle'].forEach(id=>{
     const el = document.getElementById(id);
@@ -710,78 +557,45 @@ langTR.addEventListener('click',()=>applyLanguage('tr'));
 langEN.addEventListener('click',()=>applyLanguage('en'));
 applyLanguage(currentLang);
 
-
-
-// Mini Player Toggle
-const player = document.getElementById('player');
-const themeToggle = document.getElementById('themeToggle');
-const minimizeBtn = document.getElementById('minimizeBtn');
-const logoBtn = player.querySelector('.logo');
-
-// Başlangıç Teması Kontrolü (Hafıza)
+/* ---------- Tema toggle ---------- */
 (function() {
-  const currentTheme = sessionStorage.getItem('theme');
+  const themeToggle = document.getElementById('themeToggle');
   const body = document.body;
-  const icon = themeToggle.querySelector('i');
   
-  if (currentTheme === 'light') {
-    body.classList.remove('dark');
-    icon.className = 'fa-solid fa-moon';
-  } else {
-    body.classList.add('dark');
-    icon.className = 'fa-solid fa-sun';
-  }
-})();
+  // Sayfa yüklendiğinde tema kontrolü
+const currentTheme = sessionStorage.getItem('theme');
 
-function toggleTheme() {
-  const body = document.body;
-  body.classList.toggle('dark');
-  const isDark = body.classList.contains('dark');
-  const icon = themeToggle.querySelector('i');
-  icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-  sessionStorage.setItem('theme', isDark ? 'dark' : 'light');
+if (currentTheme === 'dark' || currentTheme === null) {
+  // İlk açılışta veya sessionStorage "dark" ise
+  body.classList.add('dark');
+  themeToggle.querySelector('i').className = 'fa-solid fa-sun';
+} else {
+  themeToggle.querySelector('i').className = 'fa-solid fa-moon';
 }
 
-themeToggle.addEventListener('click', (e) => {
-  // Eğer tarayıcı View Transitions API desteklemiyorsa normal değiştir
-  if (!document.startViewTransition) {
-    toggleTheme();
-    return;
-  }
-
-  // Tıklama koordinatlarını al
-  const x = e.clientX;
-  const y = e.clientY;
-  const endRadius = Math.hypot(
-    Math.max(x, innerWidth - x),
-    Math.max(y, innerHeight - y)
-  );
-
-  const transition = document.startViewTransition(() => {
-    toggleTheme();
+  
+  // Tema değiştirme
+  themeToggle.addEventListener('click', function() {
+    body.classList.toggle('dark');
+    const isDark = body.classList.contains('dark');
+    
+    // İkon değiştir
+    const icon = themeToggle.querySelector('i');
+    if (isDark) {
+      icon.className = 'fa-solid fa-sun';
+    } else {
+      icon.className = 'fa-solid fa-moon';
+    }
+    
+    // Kaydet
+    sessionStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
+})();
 
-  transition.ready.then(() => {
-    document.documentElement.animate(
-      {
-        clipPath: [
-          `circle(0 at ${x}px ${y}px)`,
-          `circle(${endRadius}px at ${x}px ${y}px)`,
-        ],
-      },
-      {
-        duration: 500,
-        easing: 'ease-in-out',
-        pseudoElement: '::view-transition-new(root)',
-      }
-    );
-  });
-});
-
-minimizeBtn.addEventListener('click',()=>player.classList.add('minimized'));
-logoBtn.addEventListener('click',()=>{
-  if(player.classList.contains('minimized')) player.classList.remove('minimized');
-});
+// Mini Player
+const player = document.getElementById('player');
+const minimizeBtn = document.getElementById('minimizeBtn');
+minimizeBtn.addEventListener('click',()=>player.classList.toggle('minimized'));
 
 // Audio controls
 const playPauseBtn = document.getElementById('playPauseBtn');
