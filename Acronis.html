@@ -31,7 +31,6 @@
             position: relative;
         }
 
-        /* Buzlu cam efektini patlatacak dekoratif parlama alanları */
         body::before,
         body::after {
             content: "";
@@ -232,7 +231,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Acronis True Image 2026 Launcher v2 (fixed)</h1>
+            <h1>Acronis True Image 2026 Portable Launcher v2 (fixed)</h1>
             <p class="subtitle">WinPE & Windows</p>
             <div
                 style="margin-top: 5px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;">
@@ -249,10 +248,11 @@
             <div class="card">
                 <h2>Türkçe Sürüm Notları</h2>
                 <ul>
-                    <li><strong>Hibrit Sistem Desteği:</strong> WinPE ve Normal Windows ortamlarını otomatik tespit eder, sorunsuz geçiş yapar.</li>
-                    <li><strong>Bağımsız Çalışma:</strong> WinPE altında <code>sc.exe</code> veya <code>powershell</code> gerektirmez, doğrudan registry üzerinden çalışır.</li>
+                    <li><strong>Hibrit Sistem Desteği:</strong> WinPE ve Canlı Windows ortamlarını otomatik tespit eder, sorunsuz geçiş yapar.</li>
+                    <li><strong>Bağımsız Çalışma:</strong> WinPE ortamında <code>sc.exe</code> veya <code>powershell</code> gerektirmez, registry üzerinden çalışır.</li>
                     <li><strong>Dahili Aktivasyon:</strong> Lisans verileri <code>Acronis Launcher.exe</code> dosyasına gömülüdür, tam sürüm olarak açılır.</li>
                     <li><strong>Filtre Yönetimi:</strong> Sürücü filtrelerini (snapman, fltsrv) sistem stabilitesini bozmadan anında enjekte eder.</li>
+                    <li><strong>Akıllı Temizlik:</strong> Kapanışta tüm izleri otomatik siler.</li>
                     <li><strong>Çalıştırma İşlemi:</strong> Uygulama mutlaka <code>Acronis Launcher.exe</code> dosyası üzerinden çalıştırılmalıdır.</li>
                 </ul>
                 <div class="badges">
@@ -270,7 +270,8 @@
                     <li><strong>Zero Dependencies:</strong> Functions without <code>sc.exe</code> or <code>powershell</code> in WinPE mode using direct registry logic.</li>
                     <li><strong>Internal Activation:</strong> The license data is embedded in the <code>Acronis Launcher.exe</code> file; it opens as the full version.</li>
                     <li><strong>Filter Management:</strong> Instantly injects driver filters (snapman, fltsrv) without compromising system stability.</li>
-                    <li><strong>Operation process:</strong> The application must be launched via <code>Acronis Launcher.exe</code> file.</li>
+                    <li><strong>Smart Cleanup:</strong> Removes all traces upon application exit.</li>
+                    <li><strong>Operation process:</strong> The application must be launched via the specifically created <code>Acronis Launcher.exe</code> file.</li>
                 </ul>
                 <div class="badges">
                     <span class="badge">WinPE Support</span>
@@ -284,7 +285,6 @@
             <p><b>Teknik Not:</b> Bu başlatıcı; hem saf (stock) hem de modifiye edilmiş tüm WinPE (Sergei, Anhdv, BlueCon, ActiveData vb.) ve Windows sürümleriyle tam uyumludur. Sürücü yükleme hatalarını (0x100005) gidermek için özel HEX enjeksiyon yöntemleri kullanır. <b>Online Windows ortamında geri yükleme yapılamaz, bu işlem için WinPE gereklidir.</b></p>
             <p style="margin-top: 5px;"><b>Technical Note:</b> This launcher is fully compatible with all Windows versions and WinPE environments (Sergei, Anhdv, BlueCon, ActiveData etc.). It utilizes specialized HEX injection methods to resolve driver loading errors (0x100005). <b>Restoration cannot be performed in an Online Windows environment; WinPE is required for this process.</b></p>
         </div>
-
     </div>
 </body>
 
