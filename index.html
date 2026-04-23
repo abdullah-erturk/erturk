@@ -39,11 +39,20 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: var(--bg);
     color: var(--text);
-    transition: background 0.4s ease, color 0.4s ease;
     line-height: 1.6;
-    padding-left: 0; /* Dinamik olarak mobilde sıfırlanacak */
+    padding-left: 280px; /* Dinamik olarak mobilde sıfırlanacak */
+    transition: background 0.4s ease, color 0.4s ease, padding-left 0.4s ease;
     overflow-x: hidden;
     position: relative;
+  }
+
+  body.sidebar-minimized {
+    padding-left: 80px;
+  }
+
+  /* Çok yüksek çözünürlüklerde (4K vb.) içeriği ekranın tam ortasında tut */
+  @media (min-width: 1800px) {
+    body { padding-left: 0 !important; }
   }
 
   /* Buzlu cam efektini patlatacak dekoratif parlama alanları */
@@ -248,7 +257,7 @@
 
   .intro {
     max-width: 920px;
-    margin: 0 auto 50px 280px;
+    margin: 0 auto 50px;
     padding: 35px;
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -258,7 +267,7 @@
     box-shadow: 
       0 10px 30px var(--shadow),
       inset 0 0 0 2px rgba(255, 255, 255, 0.1);
-    text-align: left;
+    text-align: center;
   }
 
   .intro p { margin: 12px 0; color: var(--text-dim); font-size: 1.1rem; }
@@ -752,6 +761,7 @@ const minimizeBtn = document.getElementById('minimizeBtn');
 // Mobilde otomatik küçült
 if (window.innerWidth <= 768) {
   player.classList.add('minimized');
+  document.body.classList.add('sidebar-minimized');
 }
 
 // Başlangıç Teması Kontrolü (Hafıza)
@@ -814,9 +824,15 @@ themeToggle.addEventListener('click', (e) => {
   });
 });
 
-minimizeBtn.addEventListener('click',()=>player.classList.add('minimized'));
+minimizeBtn.addEventListener('click',()=>{
+  player.classList.add('minimized');
+  document.body.classList.add('sidebar-minimized');
+});
 logoBtn.addEventListener('click',()=>{
-  if(player.classList.contains('minimized')) player.classList.remove('minimized');
+  if(player.classList.contains('minimized')) {
+    player.classList.remove('minimized');
+    document.body.classList.remove('sidebar-minimized');
+  }
 });
 
 // Audio controls
