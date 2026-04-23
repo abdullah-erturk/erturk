@@ -40,19 +40,21 @@
     background: var(--bg);
     color: var(--text);
     line-height: 1.6;
-    padding-left: 280px; /* Dinamik olarak mobilde sıfırlanacak */
+    padding-left: 0; /* Mobilde varsayılan 0 */
     transition: background 0.4s ease, color 0.4s ease, padding-left 0.4s ease;
     overflow-x: hidden;
     position: relative;
   }
 
-  body.sidebar-minimized {
-    padding-left: 80px;
-  }
+  /* Masaüstü Yerleşimi */
+  @media (min-width: 769px) {
+    body { padding-left: 280px; }
+    body.sidebar-minimized { padding-left: 80px; }
 
-  /* Çok yüksek çözünürlüklerde (4K vb.) içeriği ekranın tam ortasında tut */
-  @media (min-width: 1800px) {
-    body { padding-left: 0 !important; }
+    /* Çok yüksek çözünürlüklerde (4K vb.) içeriği ekranın tam ortasında tut */
+    @media (min-width: 1800px) {
+      body, body.sidebar-minimized { padding-left: 0 !important; }
+    }
   }
 
   /* Buzlu cam efektini patlatacak dekoratif parlama alanları */
@@ -384,13 +386,13 @@
 
   /* MEDIA QUERIES */
   @media (max-width: 768px) {
-    body { padding-left: 0; padding-top: 70px; }
+    body { padding-left: 0; padding-top: 10px; }
     body::before, body::after { display: none; } /* Mobilde performans için glowları gizle */
     
     .player { 
-      position: fixed; top: 10px; left: 10px; 
+      position: sticky; top: 10px; 
       width: calc(100% - 20px); 
-      margin: 0; 
+      margin: 0 0 20px 10px; 
       z-index: 9999;
     }
     
@@ -457,7 +459,7 @@
     </div>
     <!-- minimize button -->
     <button id="minimizeBtn" title="Küçült" style="border:none;background:transparent;cursor:pointer;padding:4px;margin-left:auto;">
-      <i class="fa-solid fa-window-minimize" style="color:var(--primary);font-size:14px;transform:translateY(-5px);"></i>
+      <i class="fa-solid fa-chevron-up" style="color:var(--primary);font-size:14px;"></i>
     </button>
   </div>
 
@@ -758,10 +760,13 @@ const themeToggle = document.getElementById('themeToggle');
 const logoBtn = player.querySelector('.logo');
 const minimizeBtn = document.getElementById('minimizeBtn');
 
-// Mobilde otomatik küçült
+// Başlangıç durumu: Mobilde küçült, Masaüstünde tam aç
 if (window.innerWidth <= 768) {
   player.classList.add('minimized');
   document.body.classList.add('sidebar-minimized');
+} else {
+  player.classList.remove('minimized');
+  document.body.classList.remove('sidebar-minimized');
 }
 
 // Başlangıç Teması Kontrolü (Hafıza)
