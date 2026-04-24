@@ -19,8 +19,8 @@ try {
 
 if (-not $args) {
     Write-Host ''
-    Write-Host 'https://erturk.netlify.app' -ForegroundColor Green
-    Write-Host 'https://erturk.netlify.app/run' -ForegroundColor Green
+    Write-Host 'https://erturk-dev.netlify.app' -ForegroundColor Green
+    Write-Host 'https://erturk-dev.netlify.app/run' -ForegroundColor Green
     Write-Host 'https://github.com/abdullah-erturk/pmas' -ForegroundColor Green
     Write-Host 'https://www.tnctr.com/topic/1254611-pmas' -ForegroundColor Green
     Write-Host ''
@@ -132,7 +132,7 @@ catch {
 <body>
 <section style="font-family: Consolas, monospace; background: #1e1e1e; color: #e4e4e4; padding: 20px; border-radius: 10px; max-width: 950px; margin: 40px auto;">
 	<div style="margin-bottom: 20px;">
-		<a href="https://erturk.netlify.app" style="display: inline-block; padding: 10px 20px; background: #4fc3f7; color: #1e1e1e; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s;">Ana Sayfa / Home</a>
+		<a href="https://erturk-dev.netlify.app" style="display: inline-block; padding: 10px 20px; background: #4fc3f7; color: #1e1e1e; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s;">Ana Sayfa / Home</a>
 	</div>  <h3>TR: <br> Windows ve Office ürünlerini etkinleştirmek için PowerShell Multi Activation System hazır.</h3>
   <h3>EN: <br> PowerShell Multi Activation System is ready to activate Windows and Office products.</h3>
   <hr style="border: 1px solid #333; margin: 20px 0;">
@@ -156,13 +156,13 @@ catch {
   EN -> Use the command that matches your Windows version.</small>
   
   <h4 style="color: #ffb74d;">Windows 7 (PowerShell 2.0):</h4>
-  <pre style="background: #2d2d2d; color: #ffb74d; padding: 12px; border-radius: 8px; overflow-x: auto;">(New-Object Net.WebClient).DownloadString('https://erturk.netlify.app/run?ps=1') | iex</pre>
+  <pre style="background: #2d2d2d; color: #ffb74d; padding: 12px; border-radius: 8px; overflow-x: auto;">(New-Object Net.WebClient).DownloadString('https://erturk-dev.netlify.app/run?ps=1') | iex</pre>
 
   <h4 style="color: #ffeb3b;">Windows 8.1 ve Windows Server:</h4>
-  <pre style="background: #2d2d2d; color: #ffeb3b; padding: 12px; border-radius: 8px; overflow-x: auto;">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm erturk.netlify.app/run | iex</pre>
+  <pre style="background: #2d2d2d; color: #ffeb3b; padding: 12px; border-radius: 8px; overflow-x: auto;">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm erturk-dev.netlify.app/run | iex</pre>
 
   <h4 style="color: #81c784;">Windows 10 ve Windows 11:</h4>
-  <pre style="background: #2d2d2d; color: #00e676; padding: 12px; border-radius: 8px; overflow-x: auto;">irm erturk.netlify.app/run | iex</pre>
+  <pre style="background: #2d2d2d; color: #00e676; padding: 12px; border-radius: 8px; overflow-x: auto;">irm erturk-dev.netlify.app/run | iex</pre>
 
 </section>
 </body>

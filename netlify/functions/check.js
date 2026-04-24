@@ -12,7 +12,7 @@ try {
 
 # Bilgi
 Write-Host ''
-Write-Host 'https://erturk.netlify.app' -ForegroundColor Green
+Write-Host 'https://erturk-dev.netlify.app' -ForegroundColor Green
 Write-Host 'https://github.com/abdullah-erturk/scan_repair_windows' -ForegroundColor Green
 Write-Host ''
 
