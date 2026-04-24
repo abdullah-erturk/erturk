@@ -1,7 +1,7 @@
-# erturk.netlify.app
+# erturk-dev.netlify.app
 
-# erturk.netlify.app/run
+# erturk-dev.netlify.app/run
 
-# erturk.netlify.app/history
+# erturk-dev.netlify.app/history
 
-# abdullah-erturk.github.io/erturk
+# abdullah-erturk.github.io/erturk-dev
